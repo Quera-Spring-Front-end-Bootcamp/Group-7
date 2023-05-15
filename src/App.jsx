@@ -1,25 +1,22 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import LoginRedister from "./pages/loginRegister"
+import { useEffect } from "react";
+import LoginRegister from "./pages/LoginRegister";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import './App.css'
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/login")
-  }, [])
+    navigate("/login");
+  }, []);
 
   return (
     <>
       <Routes>
-        <Route exact path="/login" Component={LoginRedister} />
+        <Route exact path="/login" Component={LoginRegister} />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
