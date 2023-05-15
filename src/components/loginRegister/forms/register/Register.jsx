@@ -36,7 +36,7 @@ const RegisterForm = () => {
         .قوانین و مقررات را می پذیرم <input type="checkbox" id="have-account" />
       </p>
       <button
-        className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center "
+        className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center rounded-md"
         type="submit"
       >
         ورود

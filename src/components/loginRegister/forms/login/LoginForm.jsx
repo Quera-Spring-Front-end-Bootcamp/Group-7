@@ -23,7 +23,7 @@ const LoginForm = () => {
         />
       </div>
       <button
-        className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center mb-4"
+        className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center mb-4 rounded-md"
         type="submit"
       >
         ورود

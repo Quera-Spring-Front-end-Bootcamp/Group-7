@@ -1,6 +1,6 @@
 import { useState } from "react";
-import ForgetPasswordForm from "../components/loginRegister/forms/forgetPassword";
-import ForgetPasswordMassageForm from "../components/loginRegister/forms/forgetPasswordMassage";
+import ForgetPasswordForm from "../components/loginRegister/forms/forgetPassword/ForgetPasswordForm";
+import ForgetPasswordMassageForm from "../components/loginRegister/forms/forgetPasswordMassage/ForgetPasswordMassageForm";
 import LoginForm from "../components/loginRegister/forms/login/LoginForm";
 import RegisterForm from "../components/loginRegister/forms/register/Register";
 import ResetPasswordForm from "../components/loginRegister/forms/resetPassword/ResetPasswordForm";
@@ -10,7 +10,7 @@ const LoginRegister = () => {
   return (
     <div className="w-screen h-screen relative overflow-hidden flex justify-center items-center">
       <Card>
-        <ResetPasswordForm />
+        <ForgetPasswordForm />
       </Card>
       <div className="absolute left-[80px] right-[80px] top-[40px] flex justify-between items-center">
         <div className="flex justify-center items-center gap-2.5">
