@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ForgetPasswordForm from "../components/loginRegister/forms/forgetPassword";
 import ForgetPasswordMassageForm from "../components/loginRegister/forms/forgetPasswordMassage";
-import LoginForm from "../components/loginRegister/forms/login";
+import LoginForm from "../components/loginRegister/forms/login/LoginForm";
 import RegisterForm from "../components/loginRegister/forms/register";
 
 import Card from "../components/loginRegister/forms/UI/Card";
@@ -9,7 +9,9 @@ const LoginRegister = () => {
   const [loginFormState, setLoginFormState] = useState("login");
   return (
     <div className="w-screen h-screen relative overflow-hidden flex justify-center items-center">
-      <Card />
+      <Card>
+        <LoginForm />
+      </Card>
       <div className="absolute left-[80px] right-[80px] top-[40px] flex justify-between items-center">
         <div className="flex justify-center items-center gap-2.5">
           <button className="bg-[#208D8E] text-white rounded-md text-sm w-[90px] h-[40px] flex justify-center items-center">
