@@ -7,7 +7,7 @@ const LoginForm = () => {
           ایمیل
         </label>
         <input
-          className="w-full border border-[#aaaaaa] h-[40px]"
+          className="w-full border border-[#aaaaaa] rounded-md h-[40px]"
           type="text"
           id="email"
         />
@@ -17,7 +17,7 @@ const LoginForm = () => {
           رمز عبور
         </label>
         <input
-          className="w-full border border-[#aaaaaa] h-[40px]"
+          className="w-full border border-[#aaaaaa] rounded-md h-[40px]"
           type="text"
           id="password"
         />
