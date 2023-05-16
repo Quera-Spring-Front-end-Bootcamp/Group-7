@@ -1,17 +1,25 @@
+import { useState } from "react";
+import Input from "../UI/Input";
 const ForgetPasswordForm = () => {
+  const [emailValidity, setEmailValidity] = useState(false);
+
+  const emailValidationHandler = () => {
+    setEmailValidity(true);
+  };
+  const emailChangeHandler = () => {
+    setEmailValidity(false);
+  };
   return (
     <form className="w-[450px]">
       <h2 className="text-center text-2xl mb-8">{`فراموشی رمز عبور`}</h2>
-      <div className="mb-4">
-        <label className="block mb-1 text-sm" htmlFor="email">
-          ایمیل خود را وارد کنید
-        </label>
-        <input
-          className="w-full border border-[#aaaaaa] rounded-md h-[40px]"
-          type="text"
-          id="email"
-        />
-      </div>
+      <Input
+        title="ایمیل خود را وارد کنید"
+        id="forget-pass__email"
+        inputIsValid={emailValidity}
+        type="text"
+        inputBlurHandler={emailValidationHandler}
+        inputChangeHandler={emailChangeHandler}
+      />
       <button
         className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center rounded-md rounded-md"
         type="submit"
