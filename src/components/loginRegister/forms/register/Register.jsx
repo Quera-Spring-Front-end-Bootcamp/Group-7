@@ -39,7 +39,7 @@ const RegisterForm = () => {
         className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center rounded-md"
         type="submit"
       >
-        ورود
+        ثبت نام
       </button>
     </form>
   );
