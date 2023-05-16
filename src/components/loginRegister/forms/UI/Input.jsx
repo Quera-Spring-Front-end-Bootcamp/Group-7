@@ -6,12 +6,13 @@ const Input = (props) => {
       </label>
       <input
         className={`w-full border border-[#aaaaaa] rounded-md h-[40px] px-1 block ${
-          props.inputIsValid && "wrong"
+          props.inputIsNotValid && "wrong"
         }`}
         type={props.type}
         id={props.id}
         onBlur={props.inputBlurHandler}
         onChange={props.inputChangeHandler}
+        placeholder={props.placeholder}
         style={{ direction: "ltr" }}
       />
     </div>

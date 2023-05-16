@@ -27,11 +27,11 @@
   font-family: "IranSans", sans-serif;
   outline: none;
 }
+
 input.wrong {
   color: red;
   border-color: #ff9494;
   animation: buzz-out-on-hover 0.75s linear 1;
-  transition: color 0.75s ease;
 }
 @keyframes buzz-out-on-hover {
   10% {
