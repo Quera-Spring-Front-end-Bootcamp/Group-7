@@ -1,10 +1,15 @@
 import { useState } from "react";
 import Input from "../UI/Input";
+
+let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
+
 const ForgetPasswordForm = () => {
   const [emailValidity, setEmailValidity] = useState(false);
 
-  const emailValidationHandler = () => {
-    setEmailValidity(true);
+  const emailValidationHandler = (e) => {
+    if (!regex.test(e.target.value.toLowerCase())) {
+      setEmailValidity(true);
+    }
   };
   const emailChangeHandler = () => {
     setEmailValidity(false);
