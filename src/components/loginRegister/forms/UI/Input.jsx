@@ -12,7 +12,7 @@ const Input = (props) => {
         id={props.id}
         onBlur={props.inputBlurHandler}
         onChange={props.inputChangeHandler}
-        placeholder={props.placeholder}
+        placeholder={props.placeholder || ""}
         style={{ direction: "ltr" }}
       />
     </div>
