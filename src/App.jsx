@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import LoginRedister from "./pages/loginRegister"
+import LoginRegister from "./pages/loginRegister"
 import { Route, Routes, useNavigate } from "react-router-dom";
 import './App.css'
 
@@ -16,7 +16,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route exact path="/login" Component={LoginRedister} />
+        <Route exact path="/login" Component={LoginRegister} />
       </Routes>
     </>
   )

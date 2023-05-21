@@ -4,6 +4,18 @@
 
 @import "tailwindcss/utilities";
 
+@font-face {
+  font-family: 'Avini';
+  src: local('Avini'), url(./assets/fonts/aviny-web.woff) format('woff');
+}
+@font-face {
+  font-family: 'Nazanin';
+  src: local('Nazanin'), url(./assets/fonts/BNaznnBd.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Dana';
+  src: local('Dana'), url(./assets/fonts/dana-light.woff) format('woff');
+}
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -21,5 +33,6 @@
 
 * {
   text-align: end;
+  font-family: "Dana";
 }
 
