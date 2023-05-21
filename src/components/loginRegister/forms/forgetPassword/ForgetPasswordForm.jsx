@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Input from "../UI/Input";
+import Input from "../premades/Input";
 
 let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 

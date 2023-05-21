@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import Input from "../UI/Input";
+import Input from "../premades/Input";
 let emailregex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 let nameregex = new RegExp("[a-z]{3,}");
 let numRegex = new RegExp("[0-9]");
