@@ -6,6 +6,12 @@ let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 const ForgetPasswordForm = () => {
   const [emailIsNotValid, setEmailIsNotValid] = useState(null);
   const [formValidity, setFormValidity] = useState(false);
+  const [recoveryMsg, setRecoveryMsg] = useState(false);
+  const passwordRecoveryHandler = (e) => {
+    e.preventDefault();
+    setRecoveryMsg(true);
+  };
+
   const emailBlurHandler = (e) => {
     if (!regex.test(e.target.value.toLowerCase())) {
       setEmailIsNotValid(true);
@@ -19,9 +25,8 @@ const ForgetPasswordForm = () => {
       setFormValidity(false);
     }
   };
-  return (
-    <form className="w-[450px]">
-      <h2 className="text-center text-2xl mb-8">{`فراموشی رمز عبور`}</h2>
+  const renderedForm = (
+    <div>
       <Input
         title="ایمیل خود را وارد کنید"
         id="forget-pass__email"
@@ -35,9 +40,21 @@ const ForgetPasswordForm = () => {
         className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center rounded-md rounded-md disabled:bg-slate-400 cursor-pointer disabled:cursor-not-allowed"
         type="submit"
         disabled={!formValidity}
+        onClick={passwordRecoveryHandler}
       >
         دریافت ایمیل بازیابی رمز عبور
       </button>
+    </div>
+  );
+  const renderedMsg = (
+    <p className="text-[13px]">
+      .لینک بازیابی رمز عبور برای شما ایمیل شد. لطفا ایمیل خود را بررسی کنید
+    </p>
+  );
+  return (
+    <form className="w-[450px]">
+      <h2 className="text-center text-2xl mb-8">{`فراموشی رمز عبور`}</h2>
+      {recoveryMsg ? renderedMsg : renderedForm}
     </form>
   );
 };

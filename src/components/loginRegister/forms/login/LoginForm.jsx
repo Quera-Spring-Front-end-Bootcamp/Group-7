@@ -64,14 +64,14 @@ const LoginForm = (props) => {
   };
 
   const passwordBlurHandler = (e) => {
-    if (e.target.value.trim().length <= 8) {
+    if (e.target.value.trim().length < 8) {
       dispatchLoginForm({ type: "PASSWORD_BLUR", validity: true });
     }
   };
 
   const passwordChangeHandler = (e) => {
     dispatchLoginForm({ type: "PASSWORD_CHANGE", validity: false });
-    if (e.target.value.trim().length > 8) {
+    if (e.target.value.trim().length >= 8) {
       dispatchLoginForm({
         type: "FORM_VALIDITY",
         validity: !(loginFormState.emailIsNotValid ?? true),
