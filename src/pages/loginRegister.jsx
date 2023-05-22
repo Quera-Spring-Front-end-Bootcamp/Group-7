@@ -4,7 +4,7 @@ import ForgetPasswordMassageForm from "../components/loginRegister/forms/forgetP
 import LoginForm from "../components/loginRegister/forms/login/LoginForm";
 import RegisterForm from "../components/loginRegister/forms/register/Register";
 import ResetPasswordForm from "../components/loginRegister/forms/resetPassword/ResetPasswordForm";
-import Card from "../components/loginRegister/forms/UI/Card";
+import Card from "../components/loginRegister/forms/premades/Card";
 const LoginRegister = () => {
   const [loginFormState, setLoginFormState] = useState("login");
 

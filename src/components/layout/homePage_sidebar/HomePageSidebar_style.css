@@ -1,0 +1,8 @@
+
+.headerTitle{
+    background: linear-gradient(90deg, #118C80 0%, #4AB7D8 120%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+/* text-fill-color: transparent; */
+}
