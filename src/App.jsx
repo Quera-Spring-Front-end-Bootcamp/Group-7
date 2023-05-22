@@ -1,25 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import LoginRegister from "./pages/loginRegister"
-import { Route, Routes, useNavigate } from "react-router-dom";
-import './App.css'
+import { BrowserRouter as Router, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import "./App.css";
+import { UserContext } from './context/provider';
+import HomePage from './pages/HomePage';
 
 function App() {
-  const [count, setCount] = useState(0)
   const navigate = useNavigate();
 
-  useEffect(() => {
-    navigate("/login")
-  }, [])
+  // useEffect(() => {
+  //   navigate("/login");
+  // }, []);
+
+  const { isLogin, setIsLogin } = useContext(UserContext);
+
+  const handleLogin = () => {
+    setIsLogin(true);
+  };
 
   return (
-    <>
+    // <Router>
       <Routes>
-        <Route exact path="/login" Component={LoginRegister} />
+        <Route
+          path="/login"
+          element={isLogin ? <Navigate to="/" /> : <LoginRegister handleLogin={handleLogin} />}
+        />
+        <Route
+          path="/"
+          element={isLogin ? <HomePage /> : <Navigate to="/login" />}
+        />
       </Routes>
-    </>
-  )
+    // </Router>
+  );
 }
 
-export default App
+export default App;

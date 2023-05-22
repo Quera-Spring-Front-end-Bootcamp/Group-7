@@ -5,7 +5,7 @@ export const UserContext = createContext();
 const MyProvider = ({ children }) => {
 
     const [loginFormState, setLoginFormState] = useState("login")
-    const [isLogin, setIsLogin] = useState(false)
+    const [isLogin, setIsLogin] = useState(true)
 
     return (
         <UserContext.Provider value={

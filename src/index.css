@@ -5,18 +5,9 @@
 @import "tailwindcss/utilities";
 
 @font-face {
-  font-family: 'Avini';
-  src: local('Avini'), url(./assets/fonts/aviny-web.woff) format('woff');
+  font-family: "IranSans";
+  src: local("IranSans"), url(./fonts/IranSans.ttf) format("truetype");
 }
-@font-face {
-  font-family: 'Nazanin';
-  src: local('Nazanin'), url(./assets/fonts/BNaznnBd.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Dana';
-  src: local('Dana'), url(./assets/fonts/dana-light.woff) format('woff');
-}
-
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -33,6 +24,54 @@
 
 * {
   text-align: end;
-  font-family: "Dana";
+  font-family: "IranSans", sans-serif;
+  outline: none;
 }
 
+input.wrong {
+  color: red;
+  border-color: #ff9494;
+  animation: buzz-out-on-hover 0.75s linear 1;
+}
+@keyframes buzz-out-on-hover {
+  10% {
+    -webkit-transform: translateX(3px) rotate(2deg);
+    transform: translateX(3px) rotate(2deg);
+  }
+  20% {
+    -webkit-transform: translateX(-3px) rotate(-2deg);
+    transform: translateX(-3px) rotate(-2deg);
+  }
+  30% {
+    -webkit-transform: translateX(3px) rotate(2deg);
+    transform: translateX(3px) rotate(2deg);
+  }
+  40% {
+    -webkit-transform: translateX(-3px) rotate(-2deg);
+    transform: translateX(-3px) rotate(-2deg);
+  }
+  50% {
+    -webkit-transform: translateX(2px) rotate(1deg);
+    transform: translateX(2px) rotate(1deg);
+  }
+  60% {
+    -webkit-transform: translateX(-2px) rotate(-1deg);
+    transform: translateX(-2px) rotate(-1deg);
+  }
+  70% {
+    -webkit-transform: translateX(2px) rotate(1deg);
+    transform: translateX(2px) rotate(1deg);
+  }
+  80% {
+    -webkit-transform: translateX(-2px) rotate(-1deg);
+    transform: translateX(-2px) rotate(-1deg);
+  }
+  90% {
+    -webkit-transform: translateX(1px) rotate(0);
+    transform: translateX(1px) rotate(0);
+  }
+  100% {
+    -webkit-transform: translateX(-1px) rotate(0);
+    transform: translateX(-1px) rotate(0);
+  }
+}
