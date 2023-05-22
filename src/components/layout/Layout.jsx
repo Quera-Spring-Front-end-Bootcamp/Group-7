@@ -5,7 +5,7 @@ const Layout = ({ children }) => {
     return (
         <div className="flex flex-row-reverse h-[100vh]">
             <HomePageSidebar />
-            <div className="flex flex-col w-full ">
+            <div className="flex flex-col w-full p-5">
                 <MainPageTopBox />
                 {children}
             </div>

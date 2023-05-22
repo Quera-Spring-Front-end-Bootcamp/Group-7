@@ -8,7 +8,7 @@ const MainPageTopBox = () => {
     const { taskManagerState, setTaskManagerState } = useContext(UserContext);
 
     return (
-        <div className="p-5 h-[164px] w-full flex flex-col justify-center items-center">
+        <div className=" h-[164px] w-full flex flex-col justify-center items-center">
             <div className="p-3 h-1/2 h-full w-full flex flex-row-reverse justify-between items-center">
                 <div className="flex flex-row-reverse gap-4 items-center" >
                     <p className="border-slate-500 border-l pl-4 text-2xl" >پروژه اول</p>
