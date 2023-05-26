@@ -1,9 +1,11 @@
+import BackDrop from "../../mostlyUsed/BackDrop/BackDrop";
 import ColumnViewHeader from "./ColumnViewHeader";
 import ColumnViewTask from "./ColumnViewTask";
 import classes from "./TasksView_list.module.css";
 const TasksViewColumn = () => {
   return (
     <div className={classes.container}>
+      <BackDrop />
       <div className={classes.box}>
         <ColumnViewHeader title="Open" count={"۰"} borderColor={"#F98F2E"} />
         <ColumnViewTask />
