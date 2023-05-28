@@ -20,13 +20,15 @@ import {
   faFaceSmile,
   faNoteSticky,
 } from "@fortawesome/free-regular-svg-icons";
-const TaskInformation = () => {
+const TaskInformation = (props) => {
   const [showComent, setShowComment] = useState(false);
 
   const showCommentHandler = () => {
     setShowComment((prevState) => !prevState);
   };
-  const xMarkClickHandler = () => {};
+  const xMarkClickHandler = () => {
+    props.onClose();
+  };
   return (
     <BackDrop>
       <div className="w-[90vw] h-[90vh] flex justify-center items-center overflow-hidden">
