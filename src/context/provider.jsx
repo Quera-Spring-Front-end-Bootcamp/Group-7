@@ -7,7 +7,7 @@ const MyProvider = ({ children }) => {
 
     const [loginFormState, setLoginFormState] = useState("login")
     const [isLogin, setIsLogin] = useState(true)
-    const [taskManagerState, setTaskManagerState] = useState("calendar")
+    const [taskManagerState, setTaskManagerState] = useState("list")
     const [currentDays, setCurrentDays] = useState(false)
     const [currentDay, setCurrentDay] = useState(new persianDate(new Date()))
 
