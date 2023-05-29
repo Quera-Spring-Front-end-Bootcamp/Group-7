@@ -79,7 +79,7 @@ const TasksViewCalendar = () => {
     //   }
     // console.log(new Date(currentDay.getFullYear(), currentDay.getMonth(), 1).toLocaleDateString('fa-IR'));
     return (
-        <div className="flex flex-col items-center h-[70%]">
+        <div className="flex flex-col items-center h-[80%]">
             {/* <h1>Calendar Component</h1> */}
             <div className="w-full flex flex-row-reverse flex-wrap h-full mt-4 ">
                 {currentCalendar.map((item, index) => {

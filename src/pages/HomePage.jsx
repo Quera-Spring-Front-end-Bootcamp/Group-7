@@ -7,6 +7,7 @@ import { UserContext } from "../context/provider";
 import persianDate from 'persian-date';
 
 const HomePage = () => {
+//   const { taskManagerState } = useContext(UserContext);
 
     const { taskManagerState, setCurrentDay } = useContext(UserContext);
 
@@ -27,6 +28,7 @@ const HomePage = () => {
                 return
         }
     }
+//   };
 
     return (
         <Layout >
@@ -35,4 +37,4 @@ const HomePage = () => {
     )
 }
 
-export default HomePage
+export default HomePage;

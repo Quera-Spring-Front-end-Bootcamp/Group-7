@@ -57,4 +57,4 @@ const HomePageSidebar = () => {
     )
 }
 
-export default HomePageSidebar
+export default HomePageSidebar;
