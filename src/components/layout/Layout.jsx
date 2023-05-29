@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
       <HomePageSidebar />
       <div className="flex flex-col w-full p-5 relative ">
         <MainPageTopBox />
-        <div className=" w-full ">{children}</div>
+        <div className=" w-full h-full">{children}</div>
       </div>
     </div>
   );
