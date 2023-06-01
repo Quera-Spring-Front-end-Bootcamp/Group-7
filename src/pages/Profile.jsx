@@ -1,6 +1,8 @@
 import { Fragment } from "react";
 import HomePageSidebar from "../components/layout/homePage_sidebar/HomePageSidebar";
 import UserProfileSideBar from "../components/User-profile/UserProfileSideBar";
+import UserPersonalInfo from "../components/User-profile/UserPersonalInfo";
+import UserAccountInfo from "../components/User-profile/UserAccountInfo";
 const Profile = () => {
   return (
     <div className="flex flex-row-reverse m-0">
@@ -8,7 +10,12 @@ const Profile = () => {
         <HomePageSidebar />
         <UserProfileSideBar />
       </div>
-      <div className=" w-[76%] h-screen pt-32 px-8">alireza</div>
+      <div className=" w-[76%] h-screen pt-32 px-10">
+        <div className="flex flex-col items-end gap-y-4">
+          {/* <UserPersonalInfo /> */}
+          <UserAccountInfo />
+        </div>
+      </div>
     </div>
   );
 };
