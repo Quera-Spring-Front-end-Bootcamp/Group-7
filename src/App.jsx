@@ -39,7 +39,8 @@ function App() {
     //   />
     // </Routes>
     // </Router>
-    <Profile />
+    // <Profile />
+    <HomePage />
   );
 }
 
