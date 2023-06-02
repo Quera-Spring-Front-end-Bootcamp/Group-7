@@ -31,27 +31,27 @@ const UserPersonalInfo = () => {
         </div>
         <div className="mb-4">
           <label
-            htmlFor="personal-info__name"
+            htmlFor="personal-info__surname"
             className="block text-[14px] mb-1"
           >
             نام خانوادگی
           </label>
           <input
             type="text"
-            id="personal-info__name"
+            id="personal-info__surname"
             className="w-full border border-solid border-slate-500 rounded h-[35px] p-1"
           />
         </div>
         <div className="mb-8">
           <label
-            htmlFor="personal-info__name"
+            htmlFor="personal-info__phone"
             className="block text-[14px] mb-1"
           >
             شماره موبایل
           </label>
           <input
             type="number"
-            id="personal-info__name"
+            id="personal-info__phone"
             className="w-full border border-solid border-slate-500 rounded h-[35px] p-1"
           />
         </div>

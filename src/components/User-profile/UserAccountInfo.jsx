@@ -6,14 +6,14 @@ const UserAccountInfo = () => {
       <form className=" w-[400px]">
         <div className="mb-4">
           <label
-            htmlFor="personal-info__name"
+            htmlFor="account-info__email"
             className="block text-[14px] mb-1"
           >
             ایمیل
           </label>
           <input
             type="text"
-            id="personal-info__name"
+            id="account-info__email"
             className="w-full border border-solid border-slate-500 rounded h-[35px] p-1"
           />
         </div>
@@ -22,27 +22,27 @@ const UserAccountInfo = () => {
             احراز هویت
           </button>
           <label
-            htmlFor="personal-info__name"
+            htmlFor="account-info__password"
             className="block text-[14px] mb-1"
           >
             رمز عبور
           </label>
           <input
             type="text"
-            id="personal-info__name"
+            id="account-info__password"
             className="w-full border border-solid border-slate-500 rounded h-[35px] p-1 pl-28"
           />
         </div>
         <div className="mb-8">
           <label
-            htmlFor="personal-info__name"
+            htmlFor="account-info__username"
             className="block text-[14px] mb-1"
           >
             نام کاربری
           </label>
           <input
             type="number"
-            id="personal-info__name"
+            id="account-info__username"
             className="w-full border border-solid border-slate-500 rounded h-[35px] p-1"
           />
         </div>
