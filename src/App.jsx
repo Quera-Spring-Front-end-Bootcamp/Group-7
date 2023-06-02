@@ -13,6 +13,7 @@ import "./App.css";
 import { UserContext } from "./context/provider";
 import HomePage from "./pages/HomePage";
 import Profile from "./pages/Profile";
+import NewWorkSpace from "./components/WorkSpace/NewWorkSpace";
 function App() {
   const navigate = useNavigate();
 
@@ -40,7 +41,8 @@ function App() {
     // </Routes>
     // </Router>
     // <Profile />
-    <HomePage />
+    // <HomePage />
+    <NewWorkSpace />
   );
 }
 
