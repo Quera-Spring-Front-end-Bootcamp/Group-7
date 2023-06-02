@@ -3,6 +3,7 @@ import HomePageSidebar from "../components/layout/homePage_sidebar/HomePageSideb
 import UserProfileSideBar from "../components/User-profile/UserProfileSideBar";
 import UserPersonalInfo from "../components/User-profile/UserPersonalInfo";
 import UserAccountInfo from "../components/User-profile/UserAccountInfo";
+import UserAccountSetting from "../components/User-profile/UserAccountSetting";
 const Profile = () => {
   return (
     <div className="flex flex-row-reverse m-0">
@@ -13,7 +14,8 @@ const Profile = () => {
       <div className=" w-[76%] h-screen pt-32 px-10">
         <div className="flex flex-col items-end gap-y-4">
           {/* <UserPersonalInfo /> */}
-          <UserAccountInfo />
+          {/* <UserAccountInfo /> */}
+          <UserAccountSetting />
         </div>
       </div>
     </div>
