@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import WorkeSpaceStepOne from "./WorkeSpaceStepOne";
 import WorkeSpaceStepTwo from "./WorkeSpaceStepTwo";
+import WorkeSpaceStepThree from "./WorkeSpaceStepThree";
 
 const NewWorkSpace = () => {
   return (
@@ -15,7 +16,8 @@ const NewWorkSpace = () => {
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
         {/* <WorkeSpaceStepOne /> */}
-        <WorkeSpaceStepTwo />
+        {/* <WorkeSpaceStepTwo /> */}
+        <WorkeSpaceStepThree />
       </div>
     </BackDrop>
   );
