@@ -1,15 +1,21 @@
-const WorkeSpaceStepThree = () => {
+const WorkeSpaceStepThree = (props) => {
+  const showSpaceInfo = () => {
+    console.log(props.spaceInfo);
+  };
   return (
     <div className="p-4 pb-0">
       <p className="text-center text-2xl">مرور اطلاعات</p>
       <div className="my-4">
         <div className="border border-solid border-slate-300 rounded p-4 flex justify-between flex-col gap-y-6">
           <div className="flex justify-between items-center">
-            <p>تیم طراحی</p>
+            <p>{props.spaceInfo.name}</p>
             <p>نام ورک‌اسپیس</p>
           </div>
           <div className="flex justify-between items-center">
-            <div className="w-[15px] h-[15px] bg-[#00ff00]"></div>
+            <div
+              className="w-[15px] h-[15px]"
+              style={{ backgroundColor: props.spaceInfo.color }}
+            ></div>
             <p>رنگ ورک‌اسپیس</p>
           </div>
           <div className="flex justify-between items-center">
@@ -21,7 +27,10 @@ const WorkeSpaceStepThree = () => {
             <p>اعضا</p>
           </div>
         </div>
-        <button className="w-full bg-[#208D8E] p-2.5 rounded mt-8 text-white text-center text-sm">
+        <button
+          className="w-full bg-[#208D8E] p-2.5 rounded mt-8 text-white text-center text-sm"
+          onClick={showSpaceInfo}
+        >
           ساختن ورک‌اسپیس
         </button>
       </div>

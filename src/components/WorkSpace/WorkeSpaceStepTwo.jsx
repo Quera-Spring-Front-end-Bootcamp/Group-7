@@ -4,6 +4,10 @@ import { faBan } from "@fortawesome/free-solid-svg-icons";
 
 const WorkeSpaceStepTwo = (props) => {
   const [selectedColor, setSelectedColor] = useState("rgb(125, 130, 140)");
+
+  const nextStepHandler = () => {
+    props.onSelectColor(selectedColor);
+  };
   const colorPickerHandler = (e) => {
     setSelectedColor(e.target.style.backgroundColor);
   };
@@ -79,7 +83,10 @@ const WorkeSpaceStepTwo = (props) => {
             ت ط
           </p>
         </div>
-        <button className="w-full bg-[#208D8E] p-2.5 rounded mt-8 text-white text-center text-sm">
+        <button
+          className="w-full bg-[#208D8E] p-2.5 rounded mt-8 text-white text-center text-sm"
+          onClick={nextStepHandler}
+        >
           ادامه
         </button>
       </div>
