@@ -29,6 +29,23 @@ const NewWorkSpace = () => {
   return (
     <BackDrop>
       <div className="w-[500px] relative">
+        <div className="flex justify-center items-center gap-x-2 absolute left-[50%] bottom-[-55px] translate-x-[-50%]">
+          <div
+            className={`w-[8px] h-[8px] rounded-full ${
+              currentStep === 1 ? "bg-[#fff]" : "bg-[#bbb]"
+            }`}
+          ></div>
+          <div
+            className={`w-[8px] h-[8px] rounded-full ${
+              currentStep === 2 ? "bg-[#fff]" : "bg-[#bbb]"
+            }`}
+          ></div>
+          <div
+            className={`w-[8px] h-[8px] rounded-full ${
+              currentStep === 3 ? "bg-[#fff]" : "bg-[#bbb]"
+            }`}
+          ></div>
+        </div>
         <button className="absolute text-[#323232] top-[24px] right-[16px]">
           <FontAwesomeIcon icon={faXmark} />
         </button>
