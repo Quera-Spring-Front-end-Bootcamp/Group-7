@@ -14,6 +14,7 @@ import { UserContext } from "./context/provider";
 import HomePage from "./pages/HomePage";
 import Profile from "./pages/Profile";
 import NewWorkSpace from "./components/WorkSpace/NewWorkSpace";
+import ShareProject from "./components/Share/ShareProject";
 function App() {
   const navigate = useNavigate();
 
@@ -42,7 +43,8 @@ function App() {
     // </Router>
     // <Profile />
     // <HomePage />
-    <NewWorkSpace />
+    // <NewWorkSpace />
+    <ShareProject />
   );
 }
 
