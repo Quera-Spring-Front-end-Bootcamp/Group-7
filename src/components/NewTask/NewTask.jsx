@@ -1,4 +1,4 @@
-import BackDrop from "../mostlyUsed/BackDrop/BackDrop";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLink,
@@ -7,11 +7,22 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCalendar, faEye, faFlag } from "@fortawesome/free-regular-svg-icons";
+import NewTaskPriority from "./NewTaskPriority";
 
 const NewTask = () => {
+  const [priorityMenuVisibility, setPriorityMenuVisibility] = useState(false);
+
+  const priorityShowHandler = () => {
+    setPriorityMenuVisibility(true);
+  };
+  const priorityHandler = (e) => {
+    setPriorityMenuVisibility((prevState) => !prevState);
+    console.log(e, priorityMenuVisibility);
+  };
   return (
-    <BackDrop>
-      <div className="relative w-[1000px] p-4">
+    <div className="flex justify-center items-center h-screen w-screen">
+      <div className="fixed left-0 top-0 w-screen h-screen bg-black opacity-50"></div>
+      <div className="w-[1000px] p-4 relative z-10 bg-white rounded-2xl">
         <div className="flex justify-between items-center">
           <FontAwesomeIcon icon={faXmark} className="text-[#BDBDBD]" />
           <div className="flex jsutify-end items-center gap-2">
@@ -32,7 +43,7 @@ const NewTask = () => {
 
         <textarea
           placeholder="توضیحاتی برای تسک بنویسید"
-          className="w-full border p-4 h-[40px] rounded-lg resize-none"
+          className="w-full border p-4 h-[100px] rounded-lg resize-none overflow-hidden"
         ></textarea>
 
         <div className="flex items-center justify-end gap-3 my-8">
@@ -63,13 +74,19 @@ const NewTask = () => {
             <button className="flex justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted">
               <FontAwesomeIcon icon={faCalendar} className="text-[#BDBDBD] " />
             </button>
-            <button className="flex justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted">
-              <FontAwesomeIcon icon={faFlag} className="text-[#BDBDBD] " />
+            <button
+              className="flex relative justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted"
+              onClick={priorityShowHandler}
+            >
+              <FontAwesomeIcon icon={faFlag} className="text-[#BDBDBD]" />
+              {priorityMenuVisibility && (
+                <NewTaskPriority onClickPriority={priorityHandler} />
+              )}
             </button>
           </div>
         </div>
       </div>
-    </BackDrop>
+    </div>
   );
 };
 export default NewTask;
