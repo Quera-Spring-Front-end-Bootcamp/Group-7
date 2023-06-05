@@ -8,17 +8,26 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faCalendar, faEye, faFlag } from "@fortawesome/free-regular-svg-icons";
 import NewTaskPriority from "./NewTaskPriority";
+import NewTaskTag from "./NewTaskTag";
 
 const NewTask = () => {
   const [priorityMenuVisibility, setPriorityMenuVisibility] = useState(false);
+  const [tagsMenuVisibility, setTagsMenuVisibility] = useState(false);
 
   const priorityShowHandler = () => {
     setPriorityMenuVisibility(true);
   };
-  const priorityHandler = (e) => {
-    setPriorityMenuVisibility((prevState) => !prevState);
-    console.log(e, priorityMenuVisibility);
+  const priorityHandler = () => {
+    setPriorityMenuVisibility(false);
   };
+
+  const tagsShowHandler = () => {
+    setTagsMenuVisibility(true);
+  };
+  const tagsHandler = () => {
+    setTagsMenuVisibility(false);
+  };
+
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <div className="fixed left-0 top-0 w-screen h-screen bg-black opacity-50"></div>
@@ -68,8 +77,12 @@ const NewTask = () => {
                 className="text-[#BDBDBD] text-xl "
               />
             </button>
-            <button className="flex justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted">
+            <button
+              className="relative flex justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted"
+              onClick={tagsShowHandler}
+            >
               <FontAwesomeIcon icon={faTags} className="text-[#BDBDBD] " />
+              {tagsMenuVisibility && <NewTaskTag onClickTags={tagsHandler} />}
             </button>
             <button className="flex justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted">
               <FontAwesomeIcon icon={faCalendar} className="text-[#BDBDBD] " />

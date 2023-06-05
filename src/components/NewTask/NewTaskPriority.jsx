@@ -28,7 +28,7 @@ const NewTaskPriority = (props) => {
   return (
     <>
       <div
-        className="fixed z-1 left-0 top-0 w-screen h-screen bg-black opacity-10"
+        className="fixed z-1 left-0 top-0 w-screen h-screen bg-white opacity-10"
         onClick={priorityHnadler}
         id="priority-menu__backdrop"
       ></div>
