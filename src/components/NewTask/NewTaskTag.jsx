@@ -1,17 +1,22 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import NewTaskTagsMenu from "./NewTaskTagsMenu";
+import TagsContext from "../../context/tags-context";
 
-const DUMMY_TAGS = [
-  { tagName: "درس", tagColor: "bg-[#ff0000]", id: "tag1" },
-  { tagName: "مشق", tagColor: "bg-[#ffff00]", id: "tag2" },
-  { tagName: "ورزش", tagColor: "bg-[#ff00ff]", id: "tag3" },
-];
+// const DUMMY_TAGS = [
+//   { tagName: "درس", tagColor: "bg-[#ff0000]", id: "tag1" },
+//   { tagName: "مشق", tagColor: "bg-[#ffff00]", id: "tag2" },
+//   { tagName: "ورزش", tagColor: "bg-[#ff00ff]", id: "tag3" },
+// ];
 const NewTaskTag = (props) => {
+  const tagsCtx = useContext(TagsContext);
   const tagInputRef = useRef();
   const [isTypeing, setIsTyping] = useState(false);
-  const [tagNames, setTagNames] = useState(DUMMY_TAGS);
+  // const [tagNames, setTagNames] = useState(DUMMY_TAGS);
   const [searchedTags, setSearchedTags] = useState([]);
+
+  const tagRemoveHandler = (removedTag) => {};
 
   const tagsHnadler = (e) => {
     if (e.target.id === "tags-menu__backdrop") {
@@ -23,7 +28,7 @@ const NewTaskTag = (props) => {
   const inputChangeHandler = () => {
     setIsTyping(true);
 
-    const newTags = tagNames.filter((tag) => {
+    const newTags = tagsCtx.tagNames.filter((tag) => {
       if (tagInputRef.current.value.trim() !== "") {
         return tag.tagName.includes(tagInputRef.current.value);
       }
@@ -36,18 +41,26 @@ const NewTaskTag = (props) => {
   };
   const tagFormSubmitHandler = (e) => {
     e.preventDefault();
-    setTagNames((prevState) => {
-      return [
-        {
-          tagName:
-            tagInputRef.current.value !== ""
-              ? tagInputRef.current.value
-              : "تگ جدید",
-          tagColor: "bg-[#ffff00]",
-          id: Math.random(),
-        },
-        ...tagNames,
-      ];
+    // setTagNames((prevState) => {
+    //   return [
+    //     {
+    //       tagName:
+    //         tagInputRef.current.value !== ""
+    //           ? tagInputRef.current.value
+    //           : "تگ جدید",
+    //       tagColor: "bg-[#ffff00]",
+    //       id: Math.random(),
+    //     },
+    //     ...tagNames,
+    //   ];
+    // });
+    tagsCtx.addTag({
+      tagName:
+        tagInputRef.current.value !== ""
+          ? tagInputRef.current.value
+          : "تگ جدید",
+      tagColor: "bg-[#ffff00]",
+      id: Math.random(),
     });
     setIsTyping(false);
     setTimeout(() => {
@@ -61,7 +74,7 @@ const NewTaskTag = (props) => {
         onClick={tagsHnadler}
         id="tags-menu__backdrop"
       ></div>
-      <div className="bg-white w-[220px]  z-10 absolute bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)] rounded-lg p-3 bottom-[35px] left-[-55px]">
+      <div className="bg-white w-[220px] z-10 absolute bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)] rounded-lg p-3 bottom-[35px] left-[-95px]">
         <form
           className="bg-[#E9E9E9] flex justify-between items-center relative mb-2"
           onSubmit={tagFormSubmitHandler}
@@ -84,14 +97,17 @@ const NewTaskTag = (props) => {
             برای ساختن تگ جدید اینتر بزنید
           </p>
         )}
-        <ul className="h-auto max-h-[120px] overflow-y-auto ">
+        <ul className="h-auto">
           {!isTypeing &&
-            tagNames.map((tag) => (
+            tagsCtx.tagNames.map((tag) => (
               <li
                 className="flex justify-between items-center w-full"
                 key={tag.id}
               >
-                <button className="text-slate-300">...</button>
+                <div className="group/tag text-slate-300 relative ">
+                  ...
+                  <NewTaskTagsMenu clickedTag={tag} />
+                </div>
                 <p
                   className={`${tag.tagColor} rounded-md py-1 px-2 text-sm mb-2`}
                 >
@@ -105,7 +121,16 @@ const NewTaskTag = (props) => {
                 className="flex justify-between items-center w-full"
                 key={tag.id}
               >
-                <button className="text-slate-300">...</button>
+                <button className="text-slate-300 relative">
+                  ...
+                  <div className="absolute">
+                    <ul>
+                      <li>1</li>
+                      <li>2</li>
+                      <li>3</li>
+                    </ul>
+                  </div>
+                </button>
                 <p
                   className={`${tag.tagColor} rounded-md py-1 px-2 text-sm mb-2`}
                 >

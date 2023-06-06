@@ -16,6 +16,7 @@ import Profile from "./pages/Profile";
 import NewWorkSpace from "./components/WorkSpace/NewWorkSpace";
 import ShareProject from "./components/Share/ShareProject";
 import NewTask from "./components/NewTask/NewTask";
+import TagsProvider from "./context/TagsProvider";
 function App() {
   const navigate = useNavigate();
 
@@ -46,7 +47,9 @@ function App() {
     // <HomePage />
     // <NewWorkSpace />
     // <ShareProject />
-    <NewTask />
+    <TagsProvider>
+      <NewTask />
+    </TagsProvider>
   );
 }
 
