@@ -109,7 +109,8 @@ const NewTaskTag = (props) => {
                   <NewTaskTagsMenu clickedTag={tag} />
                 </div>
                 <p
-                  className={`${tag.tagColor} rounded-md py-1 px-2 text-sm mb-2`}
+                  className={`rounded-md py-1 px-2 text-sm mb-2`}
+                  style={{ backgroundColor: tag.tagColor }}
                 >
                   {tag.tagName}
                 </p>

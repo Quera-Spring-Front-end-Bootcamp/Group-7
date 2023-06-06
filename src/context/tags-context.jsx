@@ -3,6 +3,6 @@ const TagsContext = React.createContext({
   tags: [],
   removeTag: (tag) => {},
   addTag: (tag) => {},
-  changeTagColor: (tag) => {},
+  changeTagColor: (tag, color) => {},
 });
 export default TagsContext;
