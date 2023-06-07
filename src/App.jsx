@@ -47,9 +47,9 @@ function App() {
     // <Profile />
     // <HomePage />
     // <NewWorkSpace />
-    // <ShareProject />
+    <ShareProject />
     // <TagsProvider>
-    <NewTask />
+    // <NewTask />
     // </TagsProvider>
     // <NewTaskCalender />
   );
