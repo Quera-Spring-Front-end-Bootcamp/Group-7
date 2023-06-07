@@ -3,20 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import NewTaskTagsMenu from "./NewTaskTagsMenu";
 import TagsContext from "../../context/tags-context";
-
-// const DUMMY_TAGS = [
-//   { tagName: "درس", tagColor: "bg-[#ff0000]", id: "tag1" },
-//   { tagName: "مشق", tagColor: "bg-[#ffff00]", id: "tag2" },
-//   { tagName: "ورزش", tagColor: "bg-[#ff00ff]", id: "tag3" },
-// ];
 const NewTaskTag = (props) => {
   const tagsCtx = useContext(TagsContext);
   const tagInputRef = useRef();
   const [isTypeing, setIsTyping] = useState(false);
-  // const [tagNames, setTagNames] = useState(DUMMY_TAGS);
   const [searchedTags, setSearchedTags] = useState([]);
-
-  const tagRemoveHandler = (removedTag) => {};
 
   const tagsHnadler = (e) => {
     if (e.target.id === "tags-menu__backdrop") {
@@ -41,25 +32,12 @@ const NewTaskTag = (props) => {
   };
   const tagFormSubmitHandler = (e) => {
     e.preventDefault();
-    // setTagNames((prevState) => {
-    //   return [
-    //     {
-    //       tagName:
-    //         tagInputRef.current.value !== ""
-    //           ? tagInputRef.current.value
-    //           : "تگ جدید",
-    //       tagColor: "bg-[#ffff00]",
-    //       id: Math.random(),
-    //     },
-    //     ...tagNames,
-    //   ];
-    // });
     tagsCtx.addTag({
       tagName:
         tagInputRef.current.value !== ""
           ? tagInputRef.current.value
           : "تگ جدید",
-      tagColor: "bg-[#ffff00]",
+      tagColor: "rgb(252, 177, 3)",
       id: Math.random(),
     });
     setIsTyping(false);
@@ -122,18 +100,13 @@ const NewTaskTag = (props) => {
                 className="flex justify-between items-center w-full"
                 key={tag.id}
               >
-                <button className="text-slate-300 relative">
+                <div className=" group/tag text-slate-300 relative">
                   ...
-                  <div className="absolute">
-                    <ul>
-                      <li>1</li>
-                      <li>2</li>
-                      <li>3</li>
-                    </ul>
-                  </div>
-                </button>
+                  <NewTaskTagsMenu clickedTag={tag} />
+                </div>
                 <p
-                  className={`${tag.tagColor} rounded-md py-1 px-2 text-sm mb-2`}
+                  className={`rounded-md py-1 px-2 text-sm mb-2`}
+                  style={{ backgroundColor: tag.tagColor }}
                 >
                   {tag.tagName}
                 </p>

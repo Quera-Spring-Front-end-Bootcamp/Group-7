@@ -9,10 +9,12 @@ import {
 import { faCalendar, faEye, faFlag } from "@fortawesome/free-regular-svg-icons";
 import NewTaskPriority from "./NewTaskPriority";
 import NewTaskTag from "./NewTaskTag";
+import NewTaskCalendar from "./NewTaskCalendar";
 
 const NewTask = () => {
   const [priorityMenuVisibility, setPriorityMenuVisibility] = useState(false);
   const [tagsMenuVisibility, setTagsMenuVisibility] = useState(false);
+  const [calendarVisibility, setCalendarVisibility] = useState(false);
 
   const priorityShowHandler = () => {
     setPriorityMenuVisibility(true);
@@ -27,7 +29,12 @@ const NewTask = () => {
   const tagsHandler = () => {
     setTagsMenuVisibility(false);
   };
-
+  const calendarShowHandler = () => {
+    setCalendarVisibility(true);
+  };
+  const calendarHandler = () => {
+    setCalendarVisibility(false);
+  };
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <div className="fixed left-0 top-0 w-screen h-screen bg-black opacity-50"></div>
@@ -84,8 +91,14 @@ const NewTask = () => {
               <FontAwesomeIcon icon={faTags} className="text-[#BDBDBD] " />
               {tagsMenuVisibility && <NewTaskTag onClickTags={tagsHandler} />}
             </button>
-            <button className="flex justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted">
+            <button
+              className="relative flex justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted"
+              onClick={calendarShowHandler}
+            >
               <FontAwesomeIcon icon={faCalendar} className="text-[#BDBDBD] " />
+              {calendarVisibility && (
+                <NewTaskCalendar onClickCalendar={calendarHandler} />
+              )}
             </button>
             <button
               className="flex relative justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted"
