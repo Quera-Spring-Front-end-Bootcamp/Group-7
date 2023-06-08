@@ -12,7 +12,7 @@ const PermissionsButton = (props) => {
   );
 };
 
-const ShareProjectPermissions = (props) => {
+const UserAccessPermissions = (props) => {
   const onClosePermissionMenu = (e) => {
     props.onClose();
     e.stopPropagation();
@@ -56,4 +56,4 @@ const ShareProjectPermissions = (props) => {
     </>
   );
 };
-export default ShareProjectPermissions;
+export default UserAccessPermissions;

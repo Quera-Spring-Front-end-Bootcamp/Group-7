@@ -1,17 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink, faXmark } from "@fortawesome/free-solid-svg-icons";
 import ShareProjectUser from "./ShareProjectUser";
-const ShareProject = () => {
+const ShareWorkSpace = () => {
   return (
     <>
       <div className="flex justify-center items-center h-screen w-screen">
         <div className="fixed left-0 top-0 w-screen h-screen bg-black opacity-50"></div>
-        <div className="w-[500px] p-4 relative z-10 bg-white rounded-xl">
+        <div className="w-[600px] p-4 relative z-10 bg-white rounded-xl">
           <button className="absolute text-[#323232] top-[20px] right-[16px]">
             <FontAwesomeIcon icon={faXmark} />
           </button>
           <div className=" pb-0">
-            <p className="text-center text-xl">به اشتراک‌گذاری پروژه‌</p>
+            <p className="text-center text-xl">اشتراک‌گذاری ورک‌اسپیس‌</p>
             <div className="relative my-8">
               <input
                 type="text"
@@ -57,7 +57,7 @@ const ShareProject = () => {
             <ShareProjectUser
               userEmail="sararahimi@gmail.com"
               userAbbr="SR"
-              projectsAccess={false}
+              projectsAccess={true}
             />
           </div>
         </div>
@@ -65,4 +65,4 @@ const ShareProject = () => {
     </>
   );
 };
-export default ShareProject;
+export default ShareWorkSpace;
