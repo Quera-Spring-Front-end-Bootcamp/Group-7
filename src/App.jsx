@@ -34,27 +34,33 @@ function App() {
 
   return (
     // <Router>
-    // <Routes>
-    //   <Route
-    //     path="/login"
-    //     element={isLogin ? <Navigate to="/" /> : <LoginRegister handleLogin={handleLogin} />}
-    //   />
-    //   <Route
-    //     path="/"
-    //     element={isLogin ? <HomePage /> : <Navigate to="/login" />}
-    //   />
-    // </Routes>
+    <Routes>
+      <Route
+        path="/login"
+        element={
+          isLogin ? (
+            <Navigate to="/" />
+          ) : (
+            <LoginRegister handleLogin={handleLogin} />
+          )
+        }
+      />
+      <Route
+        path="/"
+        element={isLogin ? <HomePage /> : <Navigate to="/login" />}
+      />
+    </Routes>
     // </Router>
-    // <Profile />
-    // <HomePage />
-    // <NewWorkSpace />
-    <ShareProject />
-    // <ShareWorkSpace />
-    // <TagsProvider>
-    // <NewTask />
-    // </TagsProvider>
-    // <NewTaskCalender />
   );
+  // <Profile />
+  // <HomePage />
+  // <NewWorkSpace />
+  // <ShareProject />
+  // <ShareWorkSpace />
+  // <TagsProvider>
+  // <NewTask />
+  // </TagsProvider>
+  // <NewTaskCalender />
 }
 
 export default App;
