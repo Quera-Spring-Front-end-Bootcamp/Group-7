@@ -1,21 +1,33 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useId, useState } from 'react';
 import persianDate from 'persian-date';
 
 export const UserContext = createContext();
 
 const MyProvider = ({ children }) => {
 
+    const id = useId()
+
     const [loginFormState, setLoginFormState] = useState("login")
     const [isLogin, setIsLogin] = useState(true)
-    const [taskManagerState, setTaskManagerState] = useState("list")
+    const [taskManagerState, setTaskManagerState] = useState("column")
     const [currentDays, setCurrentDays] = useState(false)
     const [currentDay, setCurrentDay] = useState(new persianDate(new Date()))
+
+    const [filters, setFilters] = useState([
+        {
+            id: id,
+            option: "",
+            tag: "",
+            is: ""
+        }
+    ])
 
     const [spaces, setSpaces] = useState([
         {
             title: "درس مدیریت پروژه",
             sideColor: "#71FDA9",
-            projects:[]
+            projects:[],
+            id: 0,
         },
         {
             title: "کار های شخصی",
@@ -23,17 +35,21 @@ const MyProvider = ({ children }) => {
             projects:[
                 {
                     title: "پروژه اول",
-                    apiData: ""
+                    apiData: "",
+                    id: 0,
                 },
                 {
                     title: "پروژه دوم",
-                    apiData: ""
+                    apiData: "",
+                    id: 1,
                 },
                 {
                     title: "پروژه سوم",
-                    apiData: ""
+                    apiData: "",
+                    id: 2,
                 },
-            ]
+            ],
+            id: 1,
         },
         {
             title: "درس کامپایلر",
@@ -41,13 +57,16 @@ const MyProvider = ({ children }) => {
             projects:[
                 {
                     title: "پروژه من",
-                    apiData: ""
+                    apiData: "",
+                    id: 3,
                 },
                 {
                     title: "پروژه تو",
-                    apiData: ""
+                    apiData: "",
+                    id: 4,
                 },
-            ]
+            ],
+            id: 2,
         },
         {
             title: "درس طراحی الگوریتم",
@@ -55,9 +74,11 @@ const MyProvider = ({ children }) => {
             projects:[
                 {
                     title: "پروژه الگریتم",
-                    apiData: ""
+                    apiData: "",
+                    id: 5,
                 },
-            ]
+            ],
+            id: 3,
         },
     ])
 
@@ -70,6 +91,7 @@ const MyProvider = ({ children }) => {
                 spaces, setSpaces,
                 currentDays, setCurrentDays,
                 currentDay, setCurrentDay,
+                filters, setFilters,
             }}>
             {children}
         </UserContext.Provider>
