@@ -4,13 +4,12 @@ import BackDrop from "../../mostlyUsed/BackDrop/BackDrop";
 import ColumnViewHeader from "./ColumnViewHeader";
 import ColumnViewTask from "./ColumnViewTask";
 import classes from "./TasksView_list.module.css";
+import NewTask from "../../NewTask/NewTask";
+import { useState } from "react";
 const TasksViewColumn = () => {
+
   return (
     <div className={classes.container}>
-      <button className="fixed left-[20px] bottom-[20px] flex justify-center items-center p-3 text-white bg-[#208D8E] rounded-md gap-x-2">
-        <p>افزودن تسک</p>
-        <FontAwesomeIcon icon={faSquarePlus} />
-      </button>
       <div className={classes.box}>
         <ColumnViewHeader title="Open" count={"۰"} borderColor={"#F98F2E"} />
         <ColumnViewTask />
