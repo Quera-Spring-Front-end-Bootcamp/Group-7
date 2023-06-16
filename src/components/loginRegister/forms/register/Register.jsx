@@ -1,5 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import Input from "../premades/Input";
+import useHttp from "../../../../hooks/use-http";
+
 let emailregex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 let nameregex = new RegExp("[a-z]{3,}");
 let numRegex = new RegExp("[0-9]");
@@ -38,12 +40,32 @@ const registerFormReducer = (state, action) => {
   return registerReducerInit;
 };
 const RegisterForm = () => {
+  const registerUserRequest = (requestResult) => {
+    console.log(requestResult);
+    console.log(error);
+    console.log(isLoading);
+  };
+  const { isLoading, error, sendRequest } = useHttp(
+    {
+      url: "http://localhost:3000/api/auth/register",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: {
+        username: "alirezdazzvz",
+        email: "alirezahveivbati@gmail.com",
+        password: "password123",
+      },
+    },
+    registerUserRequest
+  );
+
   const [passRequirements, setPassRequirements] = useState({
     passStatus: false,
     passUppercase: false,
     passNumber: false,
     passLength: false,
   });
+
   const [registerFormState, dispatchRegisterForm] = useReducer(
     registerFormReducer,
     registerReducerInit
@@ -54,6 +76,7 @@ const RegisterForm = () => {
       dispatchRegisterForm({ type: "NAME_BLUR", validity: true });
     }
   };
+
   const nameChangeHandler = (e) => {
     dispatchRegisterForm({ type: "NAME_CHANGE", validity: false });
     if (nameregex.test(e.target.value.toLowerCase())) {
@@ -73,6 +96,7 @@ const RegisterForm = () => {
       dispatchRegisterForm({ type: "EMAIL_BLUR", validity: true });
     }
   };
+
   const emailChangeHandler = (e) => {
     dispatchRegisterForm({ type: "EMAIL_CHANGE", validity: false });
     if (emailregex.test(e.target.value.toLowerCase())) {
@@ -92,6 +116,7 @@ const RegisterForm = () => {
       dispatchRegisterForm({ type: "PASSWORD_BLUR", validity: true });
     }
   };
+
   const passwordChangeHandler = (e) => {
     dispatchRegisterForm({ type: "PASSWORD_CHANGE", validity: false });
 
@@ -127,6 +152,31 @@ const RegisterForm = () => {
       });
     }
   };
+
+  const registerFormSubmitHandler = (e) => {
+    e.preventDefault();
+    // fetch("http://localhost:3000/api/auth/register", {
+    //   method: "POST",
+    //   body: JSON.stringify({
+    //     username: "alirezazzz",
+    //     email: "alirezaheibati@gmail.com",
+    //     password: "password123",
+    //   }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // }).then((res) => {
+    //   if (res.ok) {
+    //     console.log("ok");
+    //   } else {
+    //     return res.json().then((data) => {
+    //       console.log(data);
+    //     });
+    //   }
+    // });
+    sendRequest();
+  };
+
   useEffect(() => {
     if (Object.values(passRequirements).every((val) => val === true)) {
       dispatchRegisterForm({
@@ -142,7 +192,7 @@ const RegisterForm = () => {
     passRequirements.passUppercase,
   ]);
   return (
-    <form className="">
+    <form className="" onSubmit={registerFormSubmitHandler}>
       <h2 className="text-center text-2xl mb-8">{`ثبت نام در کوئرا تسک منیجر`}</h2>
       <Input
         title="نام کامل"
