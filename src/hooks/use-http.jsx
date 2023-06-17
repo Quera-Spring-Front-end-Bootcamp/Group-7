@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import SpinnerContext from "../context/spinner-context";
 
 const useHttp = (requestConfig, applyData) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const spinnerCtx = useContext(SpinnerContext);
   const [error, setError] = useState(null);
 
   const sendRequest = async () => {
-    setIsLoading(true);
+    spinnerCtx.toggleSpinner();
     setError(null);
     try {
       const response = await fetch(requestConfig.url, {
@@ -30,11 +31,12 @@ const useHttp = (requestConfig, applyData) => {
       console.log(err.message);
       setError(err.message);
     }
-    setIsLoading(false);
+    spinnerCtx.toggleSpinner();
+
+    // setIsLoading(false);
   };
 
   return {
-    isLoading,
     error,
     sendRequest,
   };

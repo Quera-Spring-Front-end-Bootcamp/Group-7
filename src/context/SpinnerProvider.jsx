@@ -6,8 +6,8 @@ const SpinnerProvider = (props) => {
   const [showModal, setShowModal] = useState(false);
 
   const spinnerValue = {
-    spinnerVisibility: false,
-    backEndModalVisibility: false,
+    spinnerVisibility: showSpinner,
+    backEndModalVisibility: showModal,
     toggleSpinner: () => {
       setShowSpinner((prev) => !prev);
     },
