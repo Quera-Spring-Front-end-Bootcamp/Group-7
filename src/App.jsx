@@ -21,6 +21,7 @@ import NewTaskCalender from "./components/NewTask/NewTaskCalendar";
 import ShareWorkSpace from "./components/Share/ShareWorkSpace";
 import RequesWaitingPage from "./components/mostlyUsed/RequesWaitingPage/RequesWaitingPage";
 import SpinnerContext from "./context/spinner-context";
+import HttpRequestModal from "./components/mostlyUsed/RequesWaitingPage/HttpRequestModal";
 function App() {
   const navigate = useNavigate();
 
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <>
+      {spinnerCtx.backEndModalVisibility && <HttpRequestModal />}
       {spinnerCtx.spinnerVisibility && <RequesWaitingPage />}
       <Routes>
         <Route

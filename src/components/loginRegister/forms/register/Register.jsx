@@ -41,12 +41,8 @@ const registerFormReducer = (state, action) => {
   return registerReducerInit;
 };
 const RegisterForm = () => {
-  const registerUserRequest = (requestResult) => {
-    console.log(requestResult);
-    console.log(error);
-    console.log(isLoading);
-  };
-  const { error, sendRequest } = useHttp(
+  const registerUserRequest = (requestResult) => {};
+  const { sendRequest } = useHttp(
     {
       url: "http://localhost:3000/api/auth/register",
       method: "POST",

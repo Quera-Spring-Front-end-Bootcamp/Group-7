@@ -1,13 +1,11 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import SpinnerContext from "../context/spinner-context";
 
 const useHttp = (requestConfig, applyData) => {
   const spinnerCtx = useContext(SpinnerContext);
-  const [error, setError] = useState(null);
 
   const sendRequest = async () => {
     spinnerCtx.toggleSpinner();
-    setError(null);
     try {
       const response = await fetch(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
@@ -28,16 +26,13 @@ const useHttp = (requestConfig, applyData) => {
 
       applyData(data);
     } catch (err) {
-      console.log(err.message);
-      setError(err.message);
+      spinnerCtx.modalMsgHandler(err.message);
+      spinnerCtx.toggleModal();
     }
     spinnerCtx.toggleSpinner();
-
-    // setIsLoading(false);
   };
 
   return {
-    error,
     sendRequest,
   };
 };
