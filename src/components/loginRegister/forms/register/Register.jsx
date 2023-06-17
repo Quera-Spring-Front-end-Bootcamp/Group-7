@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import Input from "../premades/Input";
 import useHttp from "../../../../hooks/use-http";
+import RequesWaitingPage from "../../../mostlyUsed/RequesWaitingPage/RequesWaitingPage";
 
 let emailregex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 let nameregex = new RegExp("[a-z]{3,}");
@@ -249,13 +250,20 @@ const RegisterForm = () => {
       <p className="text-base mb-4">
         .قوانین و مقررات را می پذیرم <input type="checkbox" id="have-account" />
       </p>
-      <button
-        className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center rounded-md disabled:bg-slate-400 cursor-pointer disabled:cursor-not-allowed"
-        type="submit"
-        disabled={!registerFormState.registerFormIsValid}
-      >
-        ثبت نام
-      </button>
+      {!isLoading && (
+        <button
+          className="w-full bg-[#208D8E] h-[40px] text-white text-sm text-center rounded-md disabled:bg-slate-400 cursor-pointer disabled:cursor-not-allowed"
+          type="submit"
+          disabled={!registerFormState.registerFormIsValid}
+        >
+          ثبت نام
+        </button>
+      )}
+      {isLoading && (
+        <p className="w-full bg-[#208D8E] h-[40px] text-white text-sm flex justify-center items-center rounded-md cursor-not-allowed">
+          Sending request...
+        </p>
+      )}
     </form>
   );
 };

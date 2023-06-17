@@ -5,6 +5,7 @@ import LoginForm from "../components/loginRegister/forms/login/LoginForm";
 import RegisterForm from "../components/loginRegister/forms/register/Register";
 import ResetPasswordForm from "../components/loginRegister/forms/resetPassword/ResetPasswordForm";
 import Card from "../components/loginRegister/forms/premades/Card";
+import RequesWaitingPage from "../components/mostlyUsed/RequesWaitingPage/RequesWaitingPage";
 const LoginRegister = () => {
   const [loginFormState, setLoginFormState] = useState("login");
 

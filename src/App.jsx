@@ -19,6 +19,7 @@ import NewTask from "./components/NewTask/NewTask";
 import TagsProvider from "./context/TagsProvider";
 import NewTaskCalender from "./components/NewTask/NewTaskCalendar";
 import ShareWorkSpace from "./components/Share/ShareWorkSpace";
+import RequesWaitingPage from "./components/mostlyUsed/RequesWaitingPage/RequesWaitingPage";
 function App() {
   const navigate = useNavigate();
 
@@ -33,35 +34,37 @@ function App() {
   };
 
   return (
-    // <Router>
-    <Routes>
-      <Route
-        path="/login"
-        element={
-          isLogin ? (
-            <Navigate to="/" />
-          ) : (
-            <LoginRegister handleLogin={handleLogin} />
-          )
-        }
-      />
-      <Route
-        path="/"
-        element={isLogin ? <HomePage /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/profile"
-        element={isLogin ? <Profile /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/task"
-        element={isLogin ? <NewTask /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/abc"
-        element={isLogin ? <NewTaskCalender /> : <Navigate to="/login" />}
-      />
-    </Routes>
+    <>
+      <RequesWaitingPage />
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            isLogin ? (
+              <Navigate to="/" />
+            ) : (
+              <LoginRegister handleLogin={handleLogin} />
+            )
+          }
+        />
+        <Route
+          path="/"
+          element={isLogin ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile"
+          element={isLogin ? <Profile /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/task"
+          element={isLogin ? <NewTask /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/abc"
+          element={isLogin ? <NewTaskCalender /> : <Navigate to="/login" />}
+        />
+      </Routes>
+    </>
     // </Router>
   );
   // <Profile />
