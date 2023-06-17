@@ -20,6 +20,7 @@ import TagsProvider from "./context/TagsProvider";
 import NewTaskCalender from "./components/NewTask/NewTaskCalendar";
 import ShareWorkSpace from "./components/Share/ShareWorkSpace";
 import RequesWaitingPage from "./components/mostlyUsed/RequesWaitingPage/RequesWaitingPage";
+import SpinnerContext from "./context/spinner-context";
 function App() {
   const navigate = useNavigate();
 
@@ -28,14 +29,14 @@ function App() {
   // }, []);
 
   const { isLogin, setIsLogin } = useContext(UserContext);
-
+  const spinnerCtx = useContext(SpinnerContext);
   const handleLogin = () => {
     setIsLogin(true);
   };
 
   return (
     <>
-      <RequesWaitingPage />
+      {spinnerCtx.spinnerVisibility && <RequesWaitingPage />}
       <Routes>
         <Route
           path="/login"

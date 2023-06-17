@@ -4,16 +4,20 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import MyProvider from "./context/provider.jsx";
 import TagsProvider from "./context/TagsProvider.jsx";
+import SpinnerProvider from "./context/SpinnerProvider.jsx";
+
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <MyProvider>
     <TagsProvider>
-    <React.StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </React.StrictMode>
+      <SpinnerProvider>
+        <React.StrictMode>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </React.StrictMode>
+      </SpinnerProvider>
     </TagsProvider>
   </MyProvider>
 );
