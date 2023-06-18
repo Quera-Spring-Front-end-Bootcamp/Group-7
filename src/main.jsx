@@ -7,17 +7,20 @@ import TagsProvider from "./context/TagsProvider.jsx";
 import SpinnerProvider from "./context/SpinnerProvider.jsx";
 
 import "./index.css";
+import { AuthContextProvider } from "./context/auth-context.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <MyProvider>
-    <TagsProvider>
-      <SpinnerProvider>
-        <React.StrictMode>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </React.StrictMode>
-      </SpinnerProvider>
-    </TagsProvider>
-  </MyProvider>
+  <AuthContextProvider>
+    <MyProvider>
+      <TagsProvider>
+        <SpinnerProvider>
+          <React.StrictMode>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </React.StrictMode>
+        </SpinnerProvider>
+      </TagsProvider>
+    </MyProvider>
+  </AuthContextProvider>
 );
