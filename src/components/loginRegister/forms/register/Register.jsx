@@ -1,7 +1,8 @@
-import { useEffect, useReducer, useState } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
 import Input from "../premades/Input";
 import useHttp from "../../../../hooks/use-http";
 import RequesWaitingPage from "../../../mostlyUsed/RequesWaitingPage/RequesWaitingPage";
+import SpinnerContext from "../../../../context/spinner-context";
 
 let emailregex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 let nameregex = new RegExp("[a-z]{3,}");
@@ -21,36 +22,73 @@ const registerFormReducer = (state, action) => {
     return { ...state, nameIsNotValid: action.validity };
   }
   if (action.type === "NAME_CHANGE") {
-    return { ...state, nameIsNotValid: action.validity };
+    return {
+      ...state,
+      nameIsNotValid: action.validity,
+      nameInputValue: action.value,
+    };
   }
   if (action.type === "EMAIL_BLUR") {
     return { ...state, emailIsNotValid: action.validity };
   }
   if (action.type === "EMAIL_CHANGE") {
-    return { ...state, emailIsNotValid: action.validity };
+    return {
+      ...state,
+      emailIsNotValid: action.validity,
+      emailInputValue: action.value,
+    };
   }
   if (action.type === "PASSWORD_BLUR") {
     return { ...state, passwordIsNotValid: action.validity };
   }
   if (action.type === "PASSWORD_CHANGE") {
-    return { ...state, passwordIsNotValid: action.validity };
+    return {
+      ...state,
+      passwordIsNotValid: action.validity,
+      passwordInputValue: action.value,
+    };
   }
   if (action.type === "FORM_VALIDITY") {
     return { ...state, registerFormIsValid: action.validity };
   }
+  if (action.type === "USER_REGISTERED") {
+    return {
+      nameIsNotValid: undefined,
+      nameInputValue: "",
+      emailIsNotValid: undefined,
+      emailInputValue: "",
+      passwordIsNotValid: undefined,
+      passwordInputValue: "",
+      registerFormIsValid: false,
+    };
+  }
   return registerReducerInit;
 };
 const RegisterForm = () => {
-  const registerUserRequest = (requestResult) => {};
+  const spinnerCtx = useContext(SpinnerContext);
+
+  const [registerFormState, dispatchRegisterForm] = useReducer(
+    registerFormReducer,
+    registerReducerInit
+  );
+
+  const registerUserRequest = (requestResult) => {
+    console.log(requestResult);
+    dispatchRegisterForm({ type: "USER_REGISTERED" });
+    spinnerCtx.modalMsgHandler(
+      requestResult.message + " .please login to continue."
+    );
+    spinnerCtx.toggleModal();
+  };
   const { sendRequest } = useHttp(
     {
       url: "http://localhost:3000/api/auth/register",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: {
-        username: "alirezdazzvz",
-        email: "alirezahveivbati@gmail.com",
-        password: "password123",
+        username: registerFormState.nameInputValue,
+        email: registerFormState.emailInputValue,
+        password: registerFormState.passwordInputValue,
       },
     },
     registerUserRequest
@@ -63,11 +101,6 @@ const RegisterForm = () => {
     passLength: false,
   });
 
-  const [registerFormState, dispatchRegisterForm] = useReducer(
-    registerFormReducer,
-    registerReducerInit
-  );
-
   const nameBlurHandler = (e) => {
     if (!nameregex.test(e.target.value.toLowerCase())) {
       dispatchRegisterForm({ type: "NAME_BLUR", validity: true });
@@ -75,16 +108,25 @@ const RegisterForm = () => {
   };
 
   const nameChangeHandler = (e) => {
-    dispatchRegisterForm({ type: "NAME_CHANGE", validity: false });
+    dispatchRegisterForm({
+      type: "NAME_CHANGE",
+      validity: false,
+      value: e.target.value,
+    });
     if (nameregex.test(e.target.value.toLowerCase())) {
       dispatchRegisterForm({
         type: "FORM_VALIDITY",
         validity:
           !(registerFormState.emailIsNotValid ?? true) &&
           !(registerFormState.passwordIsNotValid ?? true),
+        value: e.target.value,
       });
     } else {
-      dispatchRegisterForm({ type: "FORM_VALIDITY", validity: false });
+      dispatchRegisterForm({
+        type: "FORM_VALIDITY",
+        validity: false,
+        value: e.target.value,
+      });
     }
   };
 
@@ -95,16 +137,25 @@ const RegisterForm = () => {
   };
 
   const emailChangeHandler = (e) => {
-    dispatchRegisterForm({ type: "EMAIL_CHANGE", validity: false });
+    dispatchRegisterForm({
+      type: "EMAIL_CHANGE",
+      validity: false,
+      value: e.target.value,
+    });
     if (emailregex.test(e.target.value.toLowerCase())) {
       dispatchRegisterForm({
         type: "FORM_VALIDITY",
         validity:
           !(registerFormState.nameIsNotValid ?? true) &&
           !(registerFormState.passwordIsNotValid ?? true),
+        value: e.target.value,
       });
     } else {
-      dispatchRegisterForm({ type: "FORM_VALIDITY", validity: false });
+      dispatchRegisterForm({
+        type: "FORM_VALIDITY",
+        validity: false,
+        value: e.target.value,
+      });
     }
   };
 
@@ -115,7 +166,11 @@ const RegisterForm = () => {
   };
 
   const passwordChangeHandler = (e) => {
-    dispatchRegisterForm({ type: "PASSWORD_CHANGE", validity: false });
+    dispatchRegisterForm({
+      type: "PASSWORD_CHANGE",
+      validity: false,
+      value: e.target.value,
+    });
 
     setPassRequirements(function (prevState) {
       return { ...prevState, passStatus: true };
@@ -171,6 +226,7 @@ const RegisterForm = () => {
     //     });
     //   }
     // });
+    console.log(registerFormState);
     sendRequest();
   };
 
@@ -198,6 +254,7 @@ const RegisterForm = () => {
         type="text"
         inputBlurHandler={nameBlurHandler}
         inputChangeHandler={nameChangeHandler}
+        value={registerFormState.nameInputValue}
       />
       <Input
         title="ایمیل"
@@ -207,6 +264,7 @@ const RegisterForm = () => {
         inputBlurHandler={emailBlurHandler}
         inputChangeHandler={emailChangeHandler}
         placeholder="example@sth.sth"
+        value={registerFormState.emailInputValue}
       />
       <Input
         title="رمز عبور"
@@ -215,6 +273,7 @@ const RegisterForm = () => {
         type="text"
         inputBlurHandler={passwordBlurHandler}
         inputChangeHandler={passwordChangeHandler}
+        value={registerFormState.passwordInputValue}
       />
       <ul
         className={`flex justify-between mb-4 -mt-2 ${
