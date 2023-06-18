@@ -3,7 +3,7 @@ import SpinnerContext from "./spinner-context";
 
 const SpinnerProvider = (props) => {
   const [showSpinner, setShowSpinner] = useState(false);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("some text");
 
   const spinnerValue = {
