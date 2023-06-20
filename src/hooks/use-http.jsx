@@ -1,17 +1,23 @@
-import { useContext } from "react";
-import AuthContext from "../context/auth-context";
-import SpinnerContext from "../context/spinner-context";
+// import { useContext } from "react";
+// import AuthContext from "../context/auth-context";
+// import SpinnerContext from "../context/spinner-context";
+import Cookies from "js-cookie"
 
 const useHttp = (requestConfig, applyData) => {
-  const spinnerCtx = useContext(SpinnerContext);
-  const authCtx = useContext(AuthContext);
+  // const spinnerCtx = useContext(SpinnerContext);
+  // const authCtx = useContext(AuthContext);
 
-  const sendRequest = async () => {
-    spinnerCtx.toggleSpinner();
+  const accessToken = Cookies.get("access_token")
+  console.log(Cookies.get());
+  return async () => {
+    // spinnerCtx.toggleSpinner();
     try {
       const response = await fetch(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
-        headers: { "Content-Type": "application/json", "x-auth-token": authCtx.accessToken },
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": accessToken,
+        },
         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
       });
       if (!response.ok) {
@@ -43,20 +49,18 @@ const useHttp = (requestConfig, applyData) => {
       //     "check your internet connection."
       //   );
       // }
-       
+
       const data = await response.json();
 
       applyData(data);
     } catch (err) {
-      spinnerCtx.modalMsgHandler(err.message);
-      spinnerCtx.toggleModal();
+      console.log(err);
+      // spinnerCtx.modalMsgHandler(err.message);
+      // spinnerCtx.toggleModal();
     }
-    spinnerCtx.toggleSpinner();
+    // spinnerCtx.toggleSpinner();
   };
 
-  return {
-    sendRequest,
-  };
 };
 
 export default useHttp;

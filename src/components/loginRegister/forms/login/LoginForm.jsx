@@ -1,7 +1,9 @@
 import { useContext, useReducer } from "react";
+import AuthContext from "../../../../context/auth-context";
 import { UserContext } from "../../../../context/provider";
 import useHttp from "../../../../hooks/use-http";
 import Input from "../premades/Input";
+import Cookies from "js-cookie"
 
 let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 
@@ -32,7 +34,7 @@ const loginFormReducer = (state, action) => {
 
 const LoginForm = (props) => {
 
-  const contextData = useContext(UserContext)
+  const authContext = useContext(AuthContext)
 
   const [loginFormState, dispatchLoginForm] = useReducer(loginFormReducer, {
     emailIsNotValid: undefined,
@@ -90,10 +92,16 @@ const LoginForm = (props) => {
 
   const loginUserRequest = (res) =>{
     console.log(res);
-    contextData.setIsLogin(true)
+    console.log(res.data.accessToken);
+    // contextData.setIsLogin(true)
+    Cookies.set("access_token",res.data.accessToken)
+    Cookies.set("refresh_token",res.data.refreshToken)
+    authContext.login(res.data.accessToken)
+    const x = Cookies.get()
+    console.log(x);
   }
 
-  const { sendRequest:loginRequest } = useHttp(
+  const loginRequest = useHttp(
     {
       url: "http://localhost:3000/api/auth/login",
       method: "POST",

@@ -22,6 +22,9 @@ import ShareWorkSpace from "./components/Share/ShareWorkSpace";
 import RequesWaitingPage from "./components/mostlyUsed/RequesWaitingPage/RequesWaitingPage";
 import SpinnerContext from "./context/spinner-context";
 import HttpRequestModal from "./components/mostlyUsed/RequesWaitingPage/HttpRequestModal";
+import { loginDetector } from "./initialProps";
+import AuthContext from "./context/auth-context";
+import Cookies from "js-cookie"
 function App() {
   const navigate = useNavigate();
 
@@ -35,6 +38,13 @@ function App() {
     setIsLogin(true);
   };
 
+  const authContext = useContext(AuthContext)
+  
+  useEffect(()=>{
+    loginDetector(authContext, spinnerCtx)
+    console.log(Cookies.get());
+  },[])
+
   return (
     <>
       {spinnerCtx.backEndModalVisibility && <HttpRequestModal />}
@@ -43,7 +53,7 @@ function App() {
         <Route
           path="/login"
           element={
-            isLogin ? (
+            authContext.isLoggedIn ? (
               <Navigate to="/" />
             ) : (
               <LoginRegister handleLogin={handleLogin} />
@@ -52,19 +62,19 @@ function App() {
         />
         <Route
           path="/"
-          element={isLogin ? <HomePage /> : <Navigate to="/login" />}
+          element={authContext.isLoggedIn ? <HomePage /> : <Navigate to="/login" />}
         />
         <Route
           path="/profile"
-          element={isLogin ? <Profile /> : <Navigate to="/login" />}
+          element={authContext.isLoggedIn ? <Profile /> : <Navigate to="/login" />}
         />
         <Route
           path="/task"
-          element={isLogin ? <NewTask /> : <Navigate to="/login" />}
+          element={authContext.isLoggedIn ? <NewTask /> : <Navigate to="/login" />}
         />
         <Route
           path="/abc"
-          element={isLogin ? <NewTaskCalender /> : <Navigate to="/login" />}
+          element={authContext.isLoggedIn ? <NewTaskCalender /> : <Navigate to="/login" />}
         />
       </Routes>
     </>

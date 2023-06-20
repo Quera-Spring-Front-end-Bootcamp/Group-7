@@ -80,7 +80,7 @@ const RegisterForm = () => {
     );
     spinnerCtx.toggleModal();
   };
-  const { sendRequest } = useHttp(
+  const  sendRequest = useHttp(
     {
       url: "http://localhost:3000/api/auth/register",
       method: "POST",
