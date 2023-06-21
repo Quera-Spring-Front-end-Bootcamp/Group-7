@@ -13,8 +13,13 @@ const useHttp = (requestConfig, applyData) => {
         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
       });
       if (!response.ok) {
-        if (response.statusText === "Conflict") {
+        console.log(response);
+        if (
+          response.statusText === "Conflict" ||
+          response.statusText === "Bad Request"
+        ) {
           const data = await response.json();
+          console.log(data);
           throw new Error(data.message);
         } else {
           throw new Error(

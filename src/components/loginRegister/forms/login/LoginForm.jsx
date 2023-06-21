@@ -1,41 +1,71 @@
-import { useReducer } from "react";
+import { useReducer, useContext } from "react";
+import useHttp from "../../../../hooks/use-http";
+import SpinnerContext from "../../../../context/spinner-context";
 import Input from "../premades/Input";
 
 let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
+
+const loginReducerState = {
+  emailIsNotValid: undefined,
+  emailInputValue: "",
+  passwordIsNotValid: undefined,
+  passwordInputValue: "",
+  loginFormIsValid: false,
+};
 
 const loginFormReducer = (state, action) => {
   if (action.type === "EMAIL_BLUR") {
     return { ...state, emailIsNotValid: action.validity };
   }
   if (action.type === "EMAIL_CHANGE") {
-    return { ...state, emailIsNotValid: action.validity };
+    return {
+      ...state,
+      emailIsNotValid: action.validity,
+      emailInputValue: action.value,
+    };
   }
   if (action.type === "PASSWORD_BLUR") {
     return { ...state, passwordIsNotValid: action.validity };
   }
   if (action.type === "PASSWORD_CHANGE") {
-    return { ...state, passwordIsNotValid: action.validity };
+    return {
+      ...state,
+      passwordIsNotValid: action.validity,
+      passwordInputValue: action.value,
+    };
   }
   if (action.type === "FORM_VALIDITY") {
     return { ...state, loginFormIsValid: action.validity };
   }
-  return {
-    emailIsNotValid: undefined,
-    emailInputValue: "",
-    passwordIsNotValid: undefined,
-    passwordInputValue: "",
-    loginFormIsValid: false,
-  };
+  return loginReducerState;
 };
 
 const LoginForm = (props) => {
-  const [loginFormState, dispatchLoginForm] = useReducer(loginFormReducer, {
-    emailIsNotValid: undefined,
-    emailInputValue: "",
-    passwordIsNotValid: undefined,
-    passwordInputValue: "",
-    loginFormIsValid: false,
-  });
+  const spinnerCtx = useContext(SpinnerContext);
+
+  const [loginFormState, dispatchLoginForm] = useReducer(
+    loginFormReducer,
+    loginReducerState
+  );
+
+  const loginUserRequest = (requestResult) => {
+    console.log(requestResult);
+    spinnerCtx.modalMsgHandler(requestResult.message);
+    spinnerCtx.toggleModal();
+  };
+
+  const { sendRequest } = useHttp(
+    {
+      url: "http://localhost:3000/api/auth/login",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: {
+        emailOrUsername: loginFormState.emailInputValue,
+        password: loginFormState.passwordInputValue,
+      },
+    },
+    loginUserRequest
+  );
 
   const registerBtnClickHandler = () => {
     props.showRegisterForm(props);
@@ -52,14 +82,23 @@ const LoginForm = (props) => {
   };
 
   const emailChangeHandler = (e) => {
-    dispatchLoginForm({ type: "EMAIL_CHANGE", validity: false });
+    dispatchLoginForm({
+      type: "EMAIL_CHANGE",
+      validity: false,
+      value: e.target.value,
+    });
     if (regex.test(e.target.value.toLowerCase())) {
       dispatchLoginForm({
         type: "FORM_VALIDITY",
         validity: !(loginFormState.passwordIsNotValid ?? true),
+        value: e.target.value,
       });
     } else {
-      dispatchLoginForm({ type: "FORM_VALIDITY", validity: false });
+      dispatchLoginForm({
+        type: "FORM_VALIDITY",
+        validity: false,
+        value: e.target.value,
+      });
     }
   };
 
@@ -70,19 +109,34 @@ const LoginForm = (props) => {
   };
 
   const passwordChangeHandler = (e) => {
-    dispatchLoginForm({ type: "PASSWORD_CHANGE", validity: false });
+    dispatchLoginForm({
+      type: "PASSWORD_CHANGE",
+      validity: false,
+      value: e.target.value,
+    });
     if (e.target.value.trim().length >= 8) {
       dispatchLoginForm({
         type: "FORM_VALIDITY",
         validity: !(loginFormState.emailIsNotValid ?? true),
+        value: e.target.value,
       });
     } else {
-      dispatchLoginForm({ type: "FORM_VALIDITY", validity: false });
+      dispatchLoginForm({
+        type: "FORM_VALIDITY",
+        validity: false,
+        value: e.target.value,
+      });
     }
   };
 
+  const loginFormSubmitHandler = (event) => {
+    console.log(loginFormState);
+    event.preventDefault();
+    sendRequest();
+  };
+
   return (
-    <form className="">
+    <form className="" onSubmit={loginFormSubmitHandler}>
       <h2 className="text-center text-2xl mb-8">{`(: به کوئرا تسک منیجر خوش برگشتی`}</h2>
       <Input
         title="ایمیل"
@@ -92,6 +146,7 @@ const LoginForm = (props) => {
         inputBlurHandler={emailBlurHandler}
         inputChangeHandler={emailChangeHandler}
         placeholder="example@sth.sth"
+        value={loginFormState.emailInputValue}
       />
       <Input
         title="رمز عبور"
@@ -100,6 +155,7 @@ const LoginForm = (props) => {
         type="text"
         inputBlurHandler={passwordBlurHandler}
         inputChangeHandler={passwordChangeHandler}
+        value={loginFormState.passwordInputValue}
       />
       <p
         className="mb-4 text-sm text-[#208D8E] cursor-pointer"
