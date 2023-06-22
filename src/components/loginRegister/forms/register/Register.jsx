@@ -72,7 +72,7 @@ const RegisterForm = () => {
     registerReducerInit
   );
 
-  const registerUserRequest = (requestResult) => {
+  const userRegisterDatahandler = (requestResult) => {
     console.log(requestResult);
     dispatchRegisterForm({ type: "USER_REGISTERED" });
     spinnerCtx.modalMsgHandler(
@@ -80,7 +80,7 @@ const RegisterForm = () => {
     );
     spinnerCtx.toggleModal();
   };
-  const { sendRequest } = useHttp(
+  const { sendServerRequest } = useHttp(
     {
       url: "http://localhost:3000/api/auth/register",
       method: "POST",
@@ -91,7 +91,7 @@ const RegisterForm = () => {
         password: registerFormState.passwordInputValue,
       },
     },
-    registerUserRequest
+    userRegisterDatahandler
   );
 
   const [passRequirements, setPassRequirements] = useState({
@@ -227,7 +227,7 @@ const RegisterForm = () => {
     //   }
     // });
     console.log(registerFormState);
-    sendRequest();
+    sendServerRequest();
   };
 
   useEffect(() => {

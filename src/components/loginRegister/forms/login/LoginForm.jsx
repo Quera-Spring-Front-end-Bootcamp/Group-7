@@ -48,7 +48,7 @@ const LoginForm = (props) => {
     loginReducerState
   );
 
-  const userLoginHandler = (loginData) => {
+  const userLoginDataHandler = (loginData) => {
     console.log(loginData);
     spinnerCtx.modalMsgHandler(loginData.message);
     spinnerCtx.toggleModal();
@@ -64,7 +64,7 @@ const LoginForm = (props) => {
         password: loginFormState.passwordInputValue,
       },
     },
-    userLoginHandler
+    userLoginDataHandler
   );
 
   const registerBtnClickHandler = () => {
