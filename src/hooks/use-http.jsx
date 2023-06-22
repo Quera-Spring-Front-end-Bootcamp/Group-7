@@ -1,10 +1,10 @@
-import { useContext } from "react";
+import { useContext, useCallback } from "react";
 import SpinnerContext from "../context/spinner-context";
 
-const useHttp = (requestConfig, applyData) => {
+const useHttp = () => {
   const spinnerCtx = useContext(SpinnerContext);
 
-  const sendServerRequest = async () => {
+  const sendServerRequest = useCallback(async (requestConfig, applyData) => {
     spinnerCtx.toggleSpinner();
     try {
       const response = await fetch(requestConfig.url, {
@@ -35,7 +35,7 @@ const useHttp = (requestConfig, applyData) => {
       spinnerCtx.toggleModal();
     }
     spinnerCtx.toggleSpinner();
-  };
+  }, []);
 
   return {
     sendServerRequest,

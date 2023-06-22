@@ -80,19 +80,7 @@ const RegisterForm = () => {
     );
     spinnerCtx.toggleModal();
   };
-  const { sendServerRequest } = useHttp(
-    {
-      url: "http://localhost:3000/api/auth/register",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: {
-        username: registerFormState.nameInputValue,
-        email: registerFormState.emailInputValue,
-        password: registerFormState.passwordInputValue,
-      },
-    },
-    userRegisterDatahandler
-  );
+  const { sendServerRequest } = useHttp();
 
   const [passRequirements, setPassRequirements] = useState({
     passStatus: false,
@@ -227,7 +215,19 @@ const RegisterForm = () => {
     //   }
     // });
     console.log(registerFormState);
-    sendServerRequest();
+    sendServerRequest(
+      {
+        url: "http://localhost:3000/api/auth/register",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: {
+          username: registerFormState.nameInputValue,
+          email: registerFormState.emailInputValue,
+          password: registerFormState.passwordInputValue,
+        },
+      },
+      userRegisterDatahandler
+    );
   };
 
   useEffect(() => {

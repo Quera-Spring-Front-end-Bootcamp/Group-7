@@ -66,18 +66,7 @@ const LoginForm = (props) => {
     navigate("/");
   };
 
-  const { sendServerRequest } = useHttp(
-    {
-      url: "http://localhost:3000/api/auth/login",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: {
-        emailOrUsername: loginFormState.emailInputValue,
-        password: loginFormState.passwordInputValue,
-      },
-    },
-    userLoginDataHandler
-  );
+  const { sendServerRequest } = useHttp();
 
   const registerBtnClickHandler = () => {
     props.showRegisterForm(props);
@@ -143,7 +132,18 @@ const LoginForm = (props) => {
 
   const loginFormSubmitHandler = (event) => {
     event.preventDefault();
-    sendServerRequest();
+    sendServerRequest(
+      {
+        url: "http://localhost:3000/api/auth/login",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: {
+          emailOrUsername: loginFormState.emailInputValue,
+          password: loginFormState.passwordInputValue,
+        },
+      },
+      userLoginDataHandler
+    );
   };
 
   return (
