@@ -48,13 +48,13 @@ const LoginForm = (props) => {
     loginReducerState
   );
 
-  const loginUserRequest = (requestResult) => {
-    console.log(requestResult);
-    spinnerCtx.modalMsgHandler(requestResult.message);
+  const userLoginHandler = (loginData) => {
+    console.log(loginData);
+    spinnerCtx.modalMsgHandler(loginData.message);
     spinnerCtx.toggleModal();
   };
 
-  const { sendRequest } = useHttp(
+  const { sendServerRequest } = useHttp(
     {
       url: "http://localhost:3000/api/auth/login",
       method: "POST",
@@ -64,7 +64,7 @@ const LoginForm = (props) => {
         password: loginFormState.passwordInputValue,
       },
     },
-    loginUserRequest
+    userLoginHandler
   );
 
   const registerBtnClickHandler = () => {
@@ -130,9 +130,8 @@ const LoginForm = (props) => {
   };
 
   const loginFormSubmitHandler = (event) => {
-    console.log(loginFormState);
     event.preventDefault();
-    sendRequest();
+    sendServerRequest();
   };
 
   return (

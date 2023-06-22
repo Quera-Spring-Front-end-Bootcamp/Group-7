@@ -4,7 +4,7 @@ import SpinnerContext from "../context/spinner-context";
 const useHttp = (requestConfig, applyData) => {
   const spinnerCtx = useContext(SpinnerContext);
 
-  const sendRequest = async () => {
+  const sendServerRequest = async () => {
     spinnerCtx.toggleSpinner();
     try {
       const response = await fetch(requestConfig.url, {
@@ -38,7 +38,7 @@ const useHttp = (requestConfig, applyData) => {
   };
 
   return {
-    sendRequest,
+    sendServerRequest,
   };
 };
 
