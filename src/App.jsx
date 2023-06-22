@@ -22,6 +22,7 @@ import ShareWorkSpace from "./components/Share/ShareWorkSpace";
 import RequesWaitingPage from "./components/mostlyUsed/RequesWaitingPage/RequesWaitingPage";
 import SpinnerContext from "./context/spinner-context";
 import HttpRequestModal from "./components/mostlyUsed/RequesWaitingPage/HttpRequestModal";
+import AuthContext from "./context/auth-context";
 function App() {
   const navigate = useNavigate();
 
@@ -29,43 +30,49 @@ function App() {
   //   navigate("/login");
   // }, []);
 
-  const { isLogin, setIsLogin } = useContext(UserContext);
+  // const { isLogin, setIsLogin } = useContext(UserContext);
+  const authCtx = useContext(AuthContext);
   const spinnerCtx = useContext(SpinnerContext);
-  const handleLogin = () => {
-    setIsLogin(true);
-  };
+  // const handleLogin = () => {
+  //   setIsLogin(true);
+  // };
 
   return (
     <>
       {spinnerCtx.backEndModalVisibility && <HttpRequestModal />}
       {spinnerCtx.spinnerVisibility && <RequesWaitingPage />}
       <Routes>
-        <Route
+        {authCtx.isLoggedIn && <Route path="/" element={<HomePage />} />}
+        {authCtx.isLoggedIn && <Route path="/profile" element={<Profile />} />}
+
+        {!authCtx.isLoggedIn && (
+          <Route path="/login" element={<LoginRegister />} />
+        )}
+        {authCtx.isLoggedIn && <Route path="*" element={<HomePage />} />}
+        {!authCtx.isLoggedIn && <Route path="*" element={<LoginRegister />} />}
+
+        {/* <Route
           path="/login"
-          element={
-            isLogin ? (
-              <Navigate to="/" />
-            ) : (
-              <LoginRegister handleLogin={handleLogin} />
-            )
-          }
+          element={authCtx.isLoggedIn ? <Navigate to="/" /> : <LoginRegister />}
         />
         <Route
           path="/"
-          element={isLogin ? <HomePage /> : <Navigate to="/login" />}
+          element={authCtx.isLoggedIn ? <HomePage /> : <Navigate to="/login" />}
         />
         <Route
           path="/profile"
-          element={isLogin ? <Profile /> : <Navigate to="/login" />}
+          element={authCtx.isLoggedIn ? <Profile /> : <Navigate to="/login" />}
         />
         <Route
           path="/task"
-          element={isLogin ? <NewTask /> : <Navigate to="/login" />}
+          element={authCtx.isLoggedIn ? <NewTask /> : <Navigate to="/login" />}
         />
         <Route
           path="/abc"
-          element={isLogin ? <NewTaskCalender /> : <Navigate to="/login" />}
-        />
+          element={
+            authCtx.isLoggedIn ? <NewTaskCalender /> : <Navigate to="/login" />
+          }
+        /> */}
       </Routes>
     </>
     // </Router>

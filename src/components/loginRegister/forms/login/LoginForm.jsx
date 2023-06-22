@@ -1,7 +1,9 @@
 import { useReducer, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import useHttp from "../../../../hooks/use-http";
 import SpinnerContext from "../../../../context/spinner-context";
 import Input from "../premades/Input";
+import AuthContext from "../../../../context/auth-context";
 
 let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 
@@ -41,7 +43,9 @@ const loginFormReducer = (state, action) => {
 };
 
 const LoginForm = (props) => {
+  const navigate = useNavigate();
   const spinnerCtx = useContext(SpinnerContext);
+  const authContext = useContext(AuthContext);
 
   const [loginFormState, dispatchLoginForm] = useReducer(
     loginFormReducer,
@@ -50,8 +54,16 @@ const LoginForm = (props) => {
 
   const userLoginDataHandler = (loginData) => {
     console.log(loginData);
-    spinnerCtx.modalMsgHandler(loginData.message);
-    spinnerCtx.toggleModal();
+
+    localStorage.setItem("access_token", loginData.data.accessToken);
+    localStorage.setItem("refresh_token", loginData.data.refreshToken);
+
+    authContext.login(
+      loginData.data.accessToken,
+      loginData.data.refreshToken,
+      loginData.data.toBeSendUserData._id
+    );
+    navigate("/");
   };
 
   const { sendServerRequest } = useHttp(
