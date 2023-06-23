@@ -11,13 +11,15 @@ import AccordionBox from "../../mostlyUsed/AccordionBox/AccordionBox";
 import { useContext, useState } from "react";
 import { UserContext } from "../../../context/provider";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../../../context/auth-context";
 import NewWorkSpace from "../../WorkSpace/NewWorkSpace";
 
 const HomePageSidebar = () => {
+  const authCtx = useContext(AuthContext);
   const { spaces } = useContext(UserContext);
 
-  const [showNewWorkSpace, setShowNewWorkSpace] = useState(false)
-  const [inputval,setInputval] = useState("")
+  const [showNewWorkSpace, setShowNewWorkSpace] = useState(false);
+  const [inputval, setInputval] = useState("");
 
   const navigate = useNavigate();
 
@@ -36,9 +38,14 @@ const HomePageSidebar = () => {
   //     }
   //   ];
 
-  const handleNewWorkSpaceClick = () =>{
-    setShowNewWorkSpace((val) => !val)
-  }
+  const userLogOutHandler = () => {
+    authCtx.logout();
+    localStorage.clear();
+  };
+
+  const handleNewWorkSpaceClick = () => {
+    setShowNewWorkSpace((val) => !val);
+  };
 
   return (
     <div className="w-[25%] min-w-[250px] border-l border-slate-500 pt-8 pr-8 pl-4 flex flex-col justify-between text-[14px]">
@@ -59,16 +66,23 @@ const HomePageSidebar = () => {
             className="absolute mr-4 text-[20px]"
             icon={faMagnifyingGlass}
           />
-          <input value={inputval} onChange={(e)=>setInputval(e.target.value)} className="bg-[#F6F7F9] rounded h-[40px] pr-12 w-full" />
+          <input
+            value={inputval}
+            onChange={(e) => setInputval(e.target.value)}
+            className="bg-[#F6F7F9] rounded h-[40px] pr-12 w-full"
+          />
         </div>
-        <button onClick={handleNewWorkSpaceClick} className="bg-[#D3D3D3] hover:bg-[#c5c5c5] h-8 w-full flex items-center justify-center gap-2 rounded ">
+        <button
+          onClick={handleNewWorkSpaceClick}
+          className="bg-[#D3D3D3] hover:bg-[#c5c5c5] h-8 w-full flex items-center justify-center gap-2 rounded "
+        >
           {" "}
           <p className="text-[13px]">ساختن اسپیس جدید</p>{" "}
           <FontAwesomeIcon icon={faSquarePlus} />{" "}
         </button>
         <AccordionBox sections={spaces} />
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 items-end">
         <div
           onClick={() => navigate("/profile")}
           className="flex flex-row-reverse items-center gap-2 cursor-pointer"
@@ -78,10 +92,13 @@ const HomePageSidebar = () => {
           </div>
           <p> نیلوفر موجودی </p>
         </div>
-        <div className="flex flex-row-reverse mr-2 gap-2 opacity-60 items-center">
+        <button
+          className="flex flex-row-reverse mr-2 mb-2 gap-2 opacity-60 items-center w-[100px]"
+          onClick={userLogOutHandler}
+        >
           <FontAwesomeIcon className="text-[20px]" icon={faDoorOpen} />
           <p>خروج</p>
-        </div>
+        </button>
       </div>
     </div>
   );

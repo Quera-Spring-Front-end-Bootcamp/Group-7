@@ -19,49 +19,103 @@ import NewTask from "./components/NewTask/NewTask";
 import TagsProvider from "./context/TagsProvider";
 import NewTaskCalender from "./components/NewTask/NewTaskCalendar";
 import ShareWorkSpace from "./components/Share/ShareWorkSpace";
+import RequesWaitingPage from "./components/mostlyUsed/RequesWaitingPage/RequesWaitingPage";
+import SpinnerContext from "./context/spinner-context";
+import HttpRequestModal from "./components/mostlyUsed/RequesWaitingPage/HttpRequestModal";
+import AuthContext from "./context/auth-context";
+import useHttp from "./hooks/use-http";
 function App() {
   const navigate = useNavigate();
+  const { sendServerRequest } = useHttp();
+  const [fixUseEffectBehave, setFixUseEffectBehave] = useState(false);
 
   // useEffect(() => {
   //   navigate("/login");
   // }, []);
 
-  const { isLogin, setIsLogin } = useContext(UserContext);
+  // const { isLogin, setIsLogin } = useContext(UserContext);
+  const { accessToken, refreshToken, logout, isLoggedIn, login, userID } =
+    useContext(AuthContext);
+  const spinnerCtx = useContext(SpinnerContext);
+  // const handleLogin = () => {
+  //   setIsLogin(true);
+  // };
 
-  const handleLogin = () => {
-    setIsLogin(true);
-  };
+  useEffect(() => {
+    const getNewAccessToken = (res) => {
+      localStorage.setItem("access_token", res.data.accessToken);
+      login(res.data.accessToken, refreshToken, userID);
+      setFixUseEffectBehave(true);
+    };
 
+    if (
+      localStorage.getItem("access_token") &&
+      localStorage.getItem("refresh_token")
+    ) {
+      sendServerRequest(
+        {
+          url: "http://localhost:3000/api/auth/refreshtoken",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: {
+            refreshToken: localStorage.getItem("refresh_token"),
+          },
+        },
+        getNewAccessToken
+      );
+    } else {
+      logout();
+      setFixUseEffectBehave(true);
+    }
+  }, [sendServerRequest]);
   return (
-    // <Router>
-    <Routes>
-      <Route
-        path="/login"
-        element={
-          isLogin ? (
-            <Navigate to="/" />
-          ) : (
-            <LoginRegister handleLogin={handleLogin} />
-          )
-        }
-      />
-      <Route
-        path="/"
-        element={isLogin ? <HomePage /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/profile"
-        element={isLogin ? <Profile /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/task"
-        element={isLogin ? <NewTask /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/abc"
-        element={isLogin ? <NewTaskCalender/> : <Navigate to="/login" />}
-      />
-    </Routes>
+    <>
+      {spinnerCtx.backEndModalVisibility && <HttpRequestModal />}
+      {spinnerCtx.spinnerVisibility && <RequesWaitingPage />}
+      {!fixUseEffectBehave && <RequesWaitingPage />}
+
+      <Routes>
+        {fixUseEffectBehave && isLoggedIn && (
+          <Route path="/" element={<HomePage />} />
+        )}
+        {fixUseEffectBehave && isLoggedIn && (
+          <Route path="/profile" element={<Profile />} />
+        )}
+
+        {fixUseEffectBehave && !isLoggedIn && (
+          <Route path="/login" element={<LoginRegister />} />
+        )}
+        {fixUseEffectBehave && isLoggedIn && (
+          <Route path="*" element={<HomePage />} />
+        )}
+        {fixUseEffectBehave && !isLoggedIn && (
+          <Route path="*" element={<LoginRegister />} />
+        )}
+
+        {/* <Route
+          path="/login"
+          element={authCtx.isLoggedIn ? <Navigate to="/" /> : <LoginRegister />}
+        />
+        <Route
+          path="/"
+          element={authCtx.isLoggedIn ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile"
+          element={authCtx.isLoggedIn ? <Profile /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/task"
+          element={authCtx.isLoggedIn ? <NewTask /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/abc"
+          element={
+            authCtx.isLoggedIn ? <NewTaskCalender /> : <Navigate to="/login" />
+          }
+        /> */}
+      </Routes>
+    </>
     // </Router>
   );
   // <Profile />

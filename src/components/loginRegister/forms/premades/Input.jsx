@@ -14,6 +14,7 @@ const Input = (props) => {
         onChange={props.inputChangeHandler}
         placeholder={props.placeholder || ""}
         style={{ direction: "ltr" }}
+        value={props.value}
       />
     </div>
   );
