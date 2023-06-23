@@ -23,33 +23,74 @@ import RequesWaitingPage from "./components/mostlyUsed/RequesWaitingPage/RequesW
 import SpinnerContext from "./context/spinner-context";
 import HttpRequestModal from "./components/mostlyUsed/RequesWaitingPage/HttpRequestModal";
 import AuthContext from "./context/auth-context";
+import useHttp from "./hooks/use-http";
 function App() {
   const navigate = useNavigate();
+  const { sendServerRequest } = useHttp();
+  const [fixUseEffectBehave, setFixUseEffectBehave] = useState(false);
 
   // useEffect(() => {
   //   navigate("/login");
   // }, []);
 
   // const { isLogin, setIsLogin } = useContext(UserContext);
-  const authCtx = useContext(AuthContext);
+  const { accessToken, refreshToken, logout, isLoggedIn, login, userID } =
+    useContext(AuthContext);
   const spinnerCtx = useContext(SpinnerContext);
   // const handleLogin = () => {
   //   setIsLogin(true);
   // };
 
+  useEffect(() => {
+    const getNewAccessToken = (res) => {
+      localStorage.setItem("access_token", res.data.accessToken);
+      login(res.data.accessToken, refreshToken, userID);
+      setFixUseEffectBehave(true);
+    };
+
+    if (
+      localStorage.getItem("access_token") &&
+      localStorage.getItem("refresh_token")
+    ) {
+      sendServerRequest(
+        {
+          url: "http://localhost:3000/api/auth/refreshtoken",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: {
+            refreshToken: localStorage.getItem("refresh_token"),
+          },
+        },
+        getNewAccessToken
+      );
+    } else {
+      logout();
+      setFixUseEffectBehave(true);
+    }
+  }, [sendServerRequest]);
   return (
     <>
       {spinnerCtx.backEndModalVisibility && <HttpRequestModal />}
       {spinnerCtx.spinnerVisibility && <RequesWaitingPage />}
-      <Routes>
-        {authCtx.isLoggedIn && <Route path="/" element={<HomePage />} />}
-        {authCtx.isLoggedIn && <Route path="/profile" element={<Profile />} />}
+      {!fixUseEffectBehave && <RequesWaitingPage />}
 
-        {!authCtx.isLoggedIn && (
+      <Routes>
+        {fixUseEffectBehave && isLoggedIn && (
+          <Route path="/" element={<HomePage />} />
+        )}
+        {fixUseEffectBehave && isLoggedIn && (
+          <Route path="/profile" element={<Profile />} />
+        )}
+
+        {fixUseEffectBehave && !isLoggedIn && (
           <Route path="/login" element={<LoginRegister />} />
         )}
-        {authCtx.isLoggedIn && <Route path="*" element={<HomePage />} />}
-        {!authCtx.isLoggedIn && <Route path="*" element={<LoginRegister />} />}
+        {fixUseEffectBehave && isLoggedIn && (
+          <Route path="*" element={<HomePage />} />
+        )}
+        {fixUseEffectBehave && !isLoggedIn && (
+          <Route path="*" element={<LoginRegister />} />
+        )}
 
         {/* <Route
           path="/login"
