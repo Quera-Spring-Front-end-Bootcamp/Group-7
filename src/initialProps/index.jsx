@@ -46,19 +46,3 @@ export const loginDetector = (authContext, spinnerCtx) => {
 	}
 	spinnerCtx.toggleSpinner()
 };
-
-
-export const getInitialValues = (contextData) => {
-	if (!contextData.isDataFetched.isProfileFetched){
-		// reqProfile(contextData);
-	}
-	if (!contextData.isDataFetched.isAttValuesFetched) {
-		// getAttributes(contextData);
-	}
-	if (!contextData.isDataFetched.isBrandsFetched) {
-		// getBrands(contextData);
-	}
-	// if (!contextData.isDataFetched.isAttributesFetched && (contextData.attributes.length !== 0)) {
-	// 	getAttValue(contextData);
-	// }
-};

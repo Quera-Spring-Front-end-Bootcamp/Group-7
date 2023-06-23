@@ -1,16 +1,16 @@
-// import { useContext } from "react";
+import { useContext } from "react";
 // import AuthContext from "../context/auth-context";
-// import SpinnerContext from "../context/spinner-context";
+import SpinnerContext from "../context/spinner-context";
 import Cookies from "js-cookie"
 
 const useHttp = (requestConfig, applyData) => {
-  // const spinnerCtx = useContext(SpinnerContext);
+  const spinnerCtx = useContext(SpinnerContext);
   // const authCtx = useContext(AuthContext);
 
   const accessToken = Cookies.get("access_token")
   console.log(Cookies.get());
   return async () => {
-    // spinnerCtx.toggleSpinner();
+    spinnerCtx.toggleSpinner();
     try {
       const response = await fetch(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
@@ -56,7 +56,7 @@ const useHttp = (requestConfig, applyData) => {
     } catch (err) {
       console.log(err);
       // spinnerCtx.modalMsgHandler(err.message);
-      // spinnerCtx.toggleModal();
+      spinnerCtx.toggleModal();
     }
     // spinnerCtx.toggleSpinner();
   };
