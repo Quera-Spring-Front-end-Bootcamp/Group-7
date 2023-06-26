@@ -57,6 +57,7 @@ const LoginForm = (props) => {
 
     localStorage.setItem("access_token", loginData.data.accessToken);
     localStorage.setItem("refresh_token", loginData.data.refreshToken);
+    localStorage.setItem("user_ID", loginData.data.toBeSendUserData._id);
 
     authContext.login(
       loginData.data.accessToken,
