@@ -1,35 +1,47 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
-import BackDrop from "../../mostlyUsed/BackDrop/BackDrop";
 import ColumnViewHeader from "./ColumnViewHeader";
 import ColumnViewTask from "./ColumnViewTask";
 import classes from "./TasksView_list.module.css";
 import NewTask from "../../NewTask/NewTask";
-import { useState } from "react";
-const TasksViewColumn = () => {
+import { useEffect, useState, useContext } from "react";
+import useHttp from "../../../hooks/use-http";
+import AuthContext from "../../../context/auth-context";
+
+const TasksViewColumn = (props) => {
+  const authCtx = useContext(AuthContext);
+  const { sendServerRequest: some } = useHttp();
+  const [boards, setBoards] = useState([]);
+
+  useEffect(() => {
+    const getBoardsHandler = (boards) => {
+      console.log(boards);
+      setBoards(boards.data);
+    };
+
+    some(
+      {
+        url: "http://localhost:3000/api/board/649a89d8ea4f124fdddaca88",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      getBoardsHandler
+    );
+  }, [some]);
 
   return (
     <div className={classes.container}>
-      <div className={classes.box}>
-        <ColumnViewHeader title="Open" count={"۰"} borderColor={"#F98F2E"} />
-        <ColumnViewTask />
-      </div>
-      <div className={classes.box}>
+      {boards.map((board) => (
         <ColumnViewHeader
-          title="In progress"
+          handleClose={props.handleClose}
+          title={board.name}
           count={"۰"}
-          borderColor={"#2E7FF9"}
+          borderColor={board.color}
+          id={board._id}
+          key={board._id}
+          tasks={board.tasks}
         />
-      </div>
-      <div className={classes.box}>
-        <ColumnViewHeader title="Pending" count={"۰"} borderColor={"#DEC908"} />
-      </div>
-      <div className={classes.box}>
-        <ColumnViewHeader title="To Do" count={"۰"} borderColor={"#F98F2E"} />
-      </div>
-      <div className={classes.box}>
-        <ColumnViewHeader title="Done" count={"۰"} borderColor={"#47A992"} />
-      </div>
+      ))}
     </div>
   );
 };

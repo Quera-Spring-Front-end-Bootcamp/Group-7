@@ -18,7 +18,6 @@ const HomePage = () => {
   const [showNewtaskComponent, setShowNewtaskComponent] = useState(false);
 
   useEffect(() => {
-    console.log("=============================================");
     setCurrentDay(new persianDate(new Date()));
   }, []);
 
@@ -27,14 +26,13 @@ const HomePage = () => {
       case "list":
         return <TasksViewList />;
       case "column":
-        return <TasksViewColumn />;
+        return <TasksViewColumn handleClose={setShowNewtaskComponent} />;
       case "calendar":
         return <TasksViewCalendar />;
       default:
         return;
     }
   };
-  //   };
 
   return (
     <Layout>
