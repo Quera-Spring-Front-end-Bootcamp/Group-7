@@ -33,7 +33,14 @@ const ColumnViewHeader = (props) => {
           <span className="ml-1">{props.title}</span>
         </div>
       </div>
-      <ColumnViewTask />
+      {props.tasks.map((task) => (
+        <ColumnViewTask
+          description={task.description}
+          name={task.name}
+          id={task._id}
+          key={task._id}
+        />
+      ))}
     </div>
   );
 };
