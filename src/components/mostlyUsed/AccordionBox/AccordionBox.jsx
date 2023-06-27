@@ -321,7 +321,7 @@ const AccordionBox = ({ sections }) => {
               <div className="p-[10px] mr-7 flex flex-col gap-4 mt-3">
                 {item.projects.map((item2, index2) => (
                   <div className="flex flex-row-reverse w-full items-center justify-between group/container ease-in-out duration-200 hover:bg-[#E9F9FF] p-1.5 rounded ">
-                    <p>{item2.title}</p>
+                    <p>{item2.name}</p>
                     <p
                       className=" opacity-0 group-hover/container:opacity-100 mt-[-6px] transition-opacity duration-200 ease-in-out cursor-pointer"
                       onClick={() => handleProjectOptions(item2._id)}
