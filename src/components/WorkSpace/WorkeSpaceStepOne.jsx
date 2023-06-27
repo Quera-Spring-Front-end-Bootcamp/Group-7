@@ -1,7 +1,8 @@
 import { useRef } from "react";
-const WorkeSpaceStepOne = (props) => {
+const WorkeSpaceStepOne = (props ) => {
   const spaceNameRef = useRef();
   const nextStepHandler = () => {
+    console.log(props.wokspaceName);
     if (spaceNameRef.current.value.trim() === "") {
       return;
     }
@@ -19,6 +20,8 @@ const WorkeSpaceStepOne = (props) => {
           id="work-space__name"
           className="w-full border border-solid border-slate-500 rounded h-[40px] p-1"
           ref={spaceNameRef}
+          onChange={(e)=>props.setWorkspaceName(e.target.value)}
+          value={props.wokspaceName}
         />
         <button
           className="w-full bg-[#208D8E] p-2.5 rounded mt-8 text-white text-center text-sm"

@@ -72,7 +72,7 @@ const RegisterForm = () => {
     registerReducerInit
   );
 
-  const registerUserRequest = (requestResult) => {
+  const userRegisterDatahandler = (requestResult) => {
     console.log(requestResult);
     dispatchRegisterForm({ type: "USER_REGISTERED" });
     spinnerCtx.modalMsgHandler(
@@ -80,19 +80,7 @@ const RegisterForm = () => {
     );
     spinnerCtx.toggleModal();
   };
-  const  sendRequest = useHttp(
-    {
-      url: "http://localhost:3000/api/auth/register",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: {
-        username: registerFormState.nameInputValue,
-        email: registerFormState.emailInputValue,
-        password: registerFormState.passwordInputValue,
-      },
-    },
-    registerUserRequest
-  );
+  const { sendServerRequest } = useHttp();
 
   const [passRequirements, setPassRequirements] = useState({
     passStatus: false,
@@ -227,7 +215,19 @@ const RegisterForm = () => {
     //   }
     // });
     console.log(registerFormState);
-    sendRequest();
+    sendServerRequest(
+      {
+        url: "http://localhost:3000/api/auth/register",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: {
+          username: registerFormState.nameInputValue,
+          email: registerFormState.emailInputValue,
+          password: registerFormState.passwordInputValue,
+        },
+      },
+      userRegisterDatahandler
+    );
   };
 
   useEffect(() => {

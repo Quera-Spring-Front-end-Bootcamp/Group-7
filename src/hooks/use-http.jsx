@@ -1,28 +1,26 @@
-import { useContext } from "react";
-// import AuthContext from "../context/auth-context";
+import { useContext, useCallback } from "react";
 import SpinnerContext from "../context/spinner-context";
-import Cookies from "js-cookie"
 
-const useHttp = (requestConfig, applyData) => {
+const useHttp = () => {
   const spinnerCtx = useContext(SpinnerContext);
-  // const authCtx = useContext(AuthContext);
 
-  const accessToken = Cookies.get("access_token")
-  console.log(Cookies.get());
-  return async () => {
+  const accessToken = localStorage.getItem("access_token")
+  const sendServerRequest = useCallback(async (requestConfig, applyData) => {
     spinnerCtx.toggleSpinner();
     try {
       const response = await fetch(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": accessToken,
-        },
+        headers: { "Content-Type": "application/json", "x-auth-token": accessToken },
         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
       });
       if (!response.ok) {
-        if (response.statusText === "Conflict" || response.status === 404) {
+        console.log(response);
+        if (
+          response.statusText === "Conflict" ||
+          response.statusText === "Bad Request"
+        ) {
           const data = await response.json();
+          console.log(data);
           throw new Error(data.message);
         } else {
           throw new Error(
@@ -30,37 +28,19 @@ const useHttp = (requestConfig, applyData) => {
           );
         }
       }
-
-      // if(response){
-      //   console.log(response);
-      //   const data = await response.json();
-      //   console.log(data);
-      //   if(!response.ok){
-      //     if(data.message){
-      //       throw new Error(data.message);
-      //     }else{
-      //       throw new Error(
-      //         "someThing went wrong please try a few seconds later."
-      //       );
-      //     }
-      //   }
-      // }else{
-      //   throw new Error(
-      //     "check your internet connection."
-      //   );
-      // }
-
       const data = await response.json();
 
       applyData(data);
     } catch (err) {
-      console.log(err);
-      // spinnerCtx.modalMsgHandler(err.message);
+      spinnerCtx.modalMsgHandler(err.message);
       spinnerCtx.toggleModal();
     }
-    // spinnerCtx.toggleSpinner();
-  };
+    spinnerCtx.toggleSpinner();
+  }, []);
 
+  return {
+    sendServerRequest,
+  };
 };
 
 export default useHttp;

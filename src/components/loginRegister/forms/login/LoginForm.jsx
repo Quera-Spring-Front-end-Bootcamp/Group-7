@@ -1,48 +1,73 @@
-import { useContext, useReducer } from "react";
-import AuthContext from "../../../../context/auth-context";
-import { UserContext } from "../../../../context/provider";
+import { useReducer, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import useHttp from "../../../../hooks/use-http";
+import SpinnerContext from "../../../../context/spinner-context";
 import Input from "../premades/Input";
-import Cookies from "js-cookie"
+import AuthContext from "../../../../context/auth-context";
 
 let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
+
+const loginReducerState = {
+  emailIsNotValid: undefined,
+  emailInputValue: "",
+  passwordIsNotValid: undefined,
+  passwordInputValue: "",
+  loginFormIsValid: false,
+};
 
 const loginFormReducer = (state, action) => {
   if (action.type === "EMAIL_BLUR") {
     return { ...state, emailIsNotValid: action.validity };
   }
   if (action.type === "EMAIL_CHANGE") {
-    return { ...state, emailIsNotValid: action.validity, emailInputValue: action.value };
+    return {
+      ...state,
+      emailIsNotValid: action.validity,
+      emailInputValue: action.value,
+    };
   }
   if (action.type === "PASSWORD_BLUR") {
     return { ...state, passwordIsNotValid: action.validity };
   }
   if (action.type === "PASSWORD_CHANGE") {
-    return { ...state, passwordIsNotValid: action.validity, passwordInputValue: action.value };
+    return {
+      ...state,
+      passwordIsNotValid: action.validity,
+      passwordInputValue: action.value,
+    };
   }
   if (action.type === "FORM_VALIDITY") {
     return { ...state, loginFormIsValid: action.validity };
   }
-  return {
-    emailIsNotValid: undefined,
-    emailInputValue: "",
-    passwordIsNotValid: undefined,
-    passwordInputValue: "",
-    loginFormIsValid: false,
-  };
+  return loginReducerState;
 };
 
 const LoginForm = (props) => {
+  const navigate = useNavigate();
+  const spinnerCtx = useContext(SpinnerContext);
+  const authContext = useContext(AuthContext);
 
-  const authContext = useContext(AuthContext)
+  const [loginFormState, dispatchLoginForm] = useReducer(
+    loginFormReducer,
+    loginReducerState
+  );
 
-  const [loginFormState, dispatchLoginForm] = useReducer(loginFormReducer, {
-    emailIsNotValid: undefined,
-    emailInputValue: "",
-    passwordIsNotValid: undefined,
-    passwordInputValue: "",
-    loginFormIsValid: false,
-  });
+  const userLoginDataHandler = (loginData) => {
+    console.log(loginData);
+
+    localStorage.setItem("access_token", loginData.data.accessToken);
+    localStorage.setItem("refresh_token", loginData.data.refreshToken);
+
+    authContext.login(
+      loginData.data.accessToken,
+      loginData.data.refreshToken,
+      loginData.data.toBeSendUserData._id,
+      loginData.data.toBeSendUserData.username,
+    );
+    navigate("/");
+  };
+
+  const { sendServerRequest } = useHttp();
 
   const registerBtnClickHandler = () => {
     props.showRegisterForm(props);
@@ -59,15 +84,23 @@ const LoginForm = (props) => {
   };
 
   const emailChangeHandler = (e) => {
-    dispatchLoginForm({ type: "EMAIL_CHANGE", validity: false, value: e.target.value });
+    dispatchLoginForm({
+      type: "EMAIL_CHANGE",
+      validity: false,
+      value: e.target.value,
+    });
     if (regex.test(e.target.value.toLowerCase())) {
       dispatchLoginForm({
         type: "FORM_VALIDITY",
         validity: !(loginFormState.passwordIsNotValid ?? true),
-        value: e.target.value
+        value: e.target.value,
       });
     } else {
-      dispatchLoginForm({ type: "FORM_VALIDITY", validity: false, value: e.target.value });
+      dispatchLoginForm({
+        type: "FORM_VALIDITY",
+        validity: false,
+        value: e.target.value,
+      });
     }
   };
 
@@ -78,48 +111,44 @@ const LoginForm = (props) => {
   };
 
   const passwordChangeHandler = (e) => {
-    dispatchLoginForm({ type: "PASSWORD_CHANGE", validity: false, value: e.target.value });
+    dispatchLoginForm({
+      type: "PASSWORD_CHANGE",
+      validity: false,
+      value: e.target.value,
+    });
     if (e.target.value.trim().length >= 8) {
       dispatchLoginForm({
         type: "FORM_VALIDITY",
         validity: !(loginFormState.emailIsNotValid ?? true),
-        value: e.target.value
+        value: e.target.value,
       });
     } else {
-      dispatchLoginForm({ type: "FORM_VALIDITY", validity: false, value: e.target.value });
+      dispatchLoginForm({
+        type: "FORM_VALIDITY",
+        validity: false,
+        value: e.target.value,
+      });
     }
   };
 
-  const loginUserRequest = (res) =>{
-    console.log(res);
-    console.log(res.data.accessToken);
-    // contextData.setIsLogin(true)
-    Cookies.set("access_token",res.data.accessToken)
-    Cookies.set("refresh_token",res.data.refreshToken)
-    authContext.login(res.data.accessToken)
-    const x = Cookies.get()
-    console.log(x);
-  }
-
-  const loginRequest = useHttp(
-    {
-      url: "http://localhost:3000/api/auth/login",
-      method: "POST",
-      body: {
-        emailOrUsername: loginFormState.emailInputValue,
-        password: loginFormState.passwordInputValue,
+  const loginFormSubmitHandler = (event) => {
+    event.preventDefault();
+    sendServerRequest(
+      {
+        url: "http://localhost:3000/api/auth/login",
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: {
+          emailOrUsername: loginFormState.emailInputValue,
+          password: loginFormState.passwordInputValue,
+        },
       },
-    },
-    loginUserRequest
-  );
-
-  const onSubmitHandler = (e) =>{
-    e.preventDefault();
-    loginRequest()
-  }
+      userLoginDataHandler
+    );
+  };
 
   return (
-    <form className="" onSubmit={onSubmitHandler}>
+    <form className="" onSubmit={loginFormSubmitHandler}>
       <h2 className="text-center text-2xl mb-8">{`(: به کوئرا تسک منیجر خوش برگشتی`}</h2>
       <Input
         title="ایمیل"
@@ -130,6 +159,7 @@ const LoginForm = (props) => {
         inputBlurHandler={emailBlurHandler}
         inputChangeHandler={emailChangeHandler}
         placeholder="example@sth.sth"
+        value={loginFormState.emailInputValue}
       />
       <Input
         title="رمز عبور"
@@ -139,6 +169,7 @@ const LoginForm = (props) => {
         value = {loginFormState.passwordInputValue}
         inputBlurHandler={passwordBlurHandler}
         inputChangeHandler={passwordChangeHandler}
+        value={loginFormState.passwordInputValue}
       />
       <p
         className="mb-4 text-sm text-[#208D8E] cursor-pointer"

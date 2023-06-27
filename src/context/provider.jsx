@@ -7,7 +7,7 @@ const MyProvider = ({ children }) => {
   const id = useId();
 
   const [loginFormState, setLoginFormState] = useState("login");
-  const [isLogin, setIsLogin] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
   const [taskManagerState, setTaskManagerState] = useState("column");
   const [currentDays, setCurrentDays] = useState(false);
   const [currentDay, setCurrentDay] = useState(new persianDate(new Date()));
@@ -86,8 +86,8 @@ const MyProvider = ({ children }) => {
       value={{
         loginFormState,
         setLoginFormState,
-        isLogin,
-        setIsLogin,
+        // isLogin,
+        // setIsLogin,
         taskManagerState,
         setTaskManagerState,
         spaces,

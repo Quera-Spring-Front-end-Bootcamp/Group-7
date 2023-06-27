@@ -9,6 +9,7 @@ const WorkeSpaceStepTwo = (props) => {
     props.onSelectColor(selectedColor);
   };
   const colorPickerHandler = (e) => {
+    props.setWorkspaceColor(e.target.style.backgroundColor)
     setSelectedColor(e.target.style.backgroundColor);
   };
   const themeColor = [
