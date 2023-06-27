@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export function outsideComponentClick(ref, setShowNewBox) {
+export function outsideComponentClick(ref, setShowNewBox,otherFunc) {
     useEffect(() => {
       /**
        * Alert if clicked on outside of element
@@ -8,6 +8,7 @@ export function outsideComponentClick(ref, setShowNewBox) {
       function handleClickOutside(event) {
         if (ref.current && !ref.current.contains(event.target)) {
           setShowNewBox(false);
+          otherFunc()
         }
       }
       // Bind the event listener

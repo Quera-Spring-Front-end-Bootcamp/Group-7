@@ -4,12 +4,13 @@ import SpinnerContext from "../context/spinner-context";
 const useHttp = () => {
   const spinnerCtx = useContext(SpinnerContext);
 
+  const accessToken = localStorage.getItem("access_token")
   const sendServerRequest = useCallback(async (requestConfig, applyData) => {
     spinnerCtx.toggleSpinner();
     try {
       const response = await fetch(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
-        headers: requestConfig.headers ? requestConfig.headers : {},
+        headers: { "Content-Type": "application/json", "x-auth-token": accessToken },
         body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
       });
       if (!response.ok) {

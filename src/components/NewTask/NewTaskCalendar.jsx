@@ -148,18 +148,17 @@ const NewTaskCalendar = (props) => {
     props.onClickCalendar();
     e.stopPropagation();
   };
-
   useEffect(() => {
     const shamsiDate = miladi_be_shamsi(
       today.getFullYear(),
       today.getMonth(),
       today.getDate()
     );
-    const currentMonth = shamsiDate[0].split("/")[1];
-    const currentDay = shamsiDate[0].split("/")[2];
+    const currentMonth = +shamsiDate[0].split("/")[1];
+    const currentDay = +shamsiDate[0].split("/")[2];
 
     const monthStartingDay = FaWeekDays.findIndex(
-      (day) => day === year1402[currentMonth - 1].startingDay
+      (day) => day === year1402[currentMonth].startingDay
     );
     let cal = [];
     for (let i = 1; i <= 42; i++) {
@@ -181,6 +180,24 @@ const NewTaskCalendar = (props) => {
     });
   }, []);
 
+  //find today week name
+  const todayValueHandler = (num) => {
+    let helper = today.getDay() + (num + 1);
+    if (helper > 6) {
+      helper = helper - 7;
+    }
+    return FaWeekDays[helper];
+  };
+  //finf month name
+  const findMonthName = () => {
+    const shamsiDate = miladi_be_shamsi(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+    const currentMonth = +shamsiDate[0].split("/")[1];
+    return year1402[currentMonth].monthName;
+  };
   return (
     <>
       <div
@@ -208,7 +225,7 @@ const NewTaskCalendar = (props) => {
               <button>
                 <FontAwesomeIcon icon={faChevronRight} />
               </button>
-              <p>تیر ۱۴۰۲</p>
+              <p>{findMonthName()} ۱۴۰۲</p>
             </div>
             <div className="flex flex-row-reverse items-center px-4 ">
               <p className="text-[#CCCFD5] text-xs text-center mr-1">شنبه</p>
@@ -262,14 +279,23 @@ const NewTaskCalendar = (props) => {
           </div>
           <div id="calendar-left-side" className="w-1/3 bg-[#F7F8F9] py-2 px-4">
             <ul>
-              <DatePicker dateTitle="امروز" dateValue="یکشنبه" />
+              <DatePicker dateTitle="امروز" dateValue={todayValueHandler(0)} />
               <DatePicker dateTitle="کمی بعد" dateValue="یکشنبه" />
-              <DatePicker dateTitle="فردا" dateValue="یکشنبه" />
-              <DatePicker dateTitle="این آخر هفته" dateValue="یکشنبه" />
-              <DatePicker dateTitle="هفته آبنده" dateValue="یکشنبه" />
-              <DatePicker dateTitle="آخر هفته آینده" dateValue="یکشنبه" />
-              <DatePicker dateTitle="دو هفته دیگر" dateValue="یکشنبه" />
-              <DatePicker dateTitle="چهار هفته دیگر" dateValue="یکشنبه" />
+              <DatePicker dateTitle="فردا" dateValue={todayValueHandler(1)} />
+              <DatePicker dateTitle="این آخر هفته" dateValue="جمعه" />
+              <DatePicker
+                dateTitle="هفته آینده"
+                dateValue={todayValueHandler(0)}
+              />
+              <DatePicker dateTitle="آخر هفته آینده" dateValue="جمعه" />
+              <DatePicker
+                dateTitle="دو هفته دیگر"
+                dateValue={todayValueHandler(0)}
+              />
+              <DatePicker
+                dateTitle="چهار هفته دیگر"
+                dateValue={todayValueHandler(0)}
+              />
             </ul>
           </div>
         </div>

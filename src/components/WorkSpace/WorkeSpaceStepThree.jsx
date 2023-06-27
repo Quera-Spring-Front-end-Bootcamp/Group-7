@@ -1,6 +1,8 @@
 const WorkeSpaceStepThree = (props) => {
+
   const showSpaceInfo = () => {
     console.log(props.spaceInfo);
+    props.onSubmitWorkspace()
   };
   return (
     <div className="p-4 pb-0">

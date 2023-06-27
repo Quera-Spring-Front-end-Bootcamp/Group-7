@@ -57,11 +57,13 @@ const LoginForm = (props) => {
 
     localStorage.setItem("access_token", loginData.data.accessToken);
     localStorage.setItem("refresh_token", loginData.data.refreshToken);
+    localStorage.setItem("user_ID", loginData.data.toBeSendUserData._id);
 
     authContext.login(
       loginData.data.accessToken,
       loginData.data.refreshToken,
-      loginData.data.toBeSendUserData._id
+      loginData.data.toBeSendUserData._id,
+      loginData.data.toBeSendUserData.username,
     );
     navigate("/");
   };
@@ -154,6 +156,7 @@ const LoginForm = (props) => {
         id="login-form__email"
         inputIsNotValid={loginFormState.emailIsNotValid}
         type="text"
+        value = {loginFormState.emailInputValue}
         inputBlurHandler={emailBlurHandler}
         inputChangeHandler={emailChangeHandler}
         placeholder="example@sth.sth"
@@ -164,6 +167,7 @@ const LoginForm = (props) => {
         id="login-form__password"
         inputIsNotValid={loginFormState.passwordIsNotValid}
         type="text"
+        value = {loginFormState.passwordInputValue}
         inputBlurHandler={passwordBlurHandler}
         inputChangeHandler={passwordChangeHandler}
         value={loginFormState.passwordInputValue}

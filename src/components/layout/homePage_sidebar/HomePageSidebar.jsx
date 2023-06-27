@@ -13,6 +13,7 @@ import { UserContext } from "../../../context/provider";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../../context/auth-context";
 import NewWorkSpace from "../../WorkSpace/NewWorkSpace";
+import useHttp from "../../../hooks/use-http";
 
 const HomePageSidebar = () => {
   const authCtx = useContext(AuthContext);
@@ -37,6 +38,20 @@ const HomePageSidebar = () => {
   //       content: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
   //     }
   //   ];
+  const newWorkSpaceCreated = (val) =>{
+    console.log(val);
+  }
+
+  const createNewWorkspace =  useHttp(
+		{
+		  url: "http://localhost:3000/api/workspace/create",
+		  method: "POST",
+		  body: {
+        name: "new space",
+		  },
+		},
+		newWorkSpaceCreated
+	  );
 
   const userLogOutHandler = () => {
     authCtx.logout();
