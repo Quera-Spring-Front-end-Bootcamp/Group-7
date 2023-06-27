@@ -4,6 +4,7 @@ import classes from "./TasksView_list.module.css";
 import ColumnViewTask from "./ColumnViewTask";
 const ColumnViewHeader = (props) => {
   const taskAddHandler = () => {
+    props.OnAddNewTask(props.id);
     props.handleClose(true);
   };
 

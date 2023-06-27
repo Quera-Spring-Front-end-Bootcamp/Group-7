@@ -11,12 +11,20 @@ import TagsProvider from "../context/TagsProvider";
 import NewTask from "../components/NewTask/NewTask";
 
 const HomePage = () => {
+  const [receivedBoardID, setReceivedBoardID] = useState();
   //   const { taskManagerState } = useContext(UserContext);
 
   const { taskManagerState, setCurrentDay } = useContext(UserContext);
 
   const [showNewtaskComponent, setShowNewtaskComponent] = useState(false);
 
+  const CloseCreateTaskHandler = (value) => {
+    setShowNewtaskComponent(value);
+  };
+
+  const addNewTaskHandler = (boardID) => {
+    setReceivedBoardID(boardID);
+  };
   useEffect(() => {
     setCurrentDay(new persianDate(new Date()));
   }, []);
@@ -26,7 +34,12 @@ const HomePage = () => {
       case "list":
         return <TasksViewList />;
       case "column":
-        return <TasksViewColumn handleClose={setShowNewtaskComponent} />;
+        return (
+          <TasksViewColumn
+            handleClose={CloseCreateTaskHandler}
+            OnAddNewTask={addNewTaskHandler}
+          />
+        );
       case "calendar":
         return <TasksViewCalendar />;
       default:
@@ -38,7 +51,10 @@ const HomePage = () => {
     <Layout>
       {showNewtaskComponent && (
         <TagsProvider>
-          <NewTask handleClose={setShowNewtaskComponent} />
+          <NewTask
+            handleClose={CloseCreateTaskHandler}
+            boardID={receivedBoardID}
+          />
         </TagsProvider>
       )}
       <ShowTasksHandler />

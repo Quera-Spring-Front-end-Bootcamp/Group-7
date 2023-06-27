@@ -5,19 +5,20 @@ import NewTask from "../../NewTask/NewTask";
 import { useEffect, useState, useContext } from "react";
 import useHttp from "../../../hooks/use-http";
 import AuthContext from "../../../context/auth-context";
+import DataContext from "../../../context/data-context";
 
 const TasksViewColumn = (props) => {
   const authCtx = useContext(AuthContext);
-  const { sendServerRequest: some } = useHttp();
-  const [boards, setBoards] = useState([]);
+  const { onSetBoadrs, boards } = useContext(DataContext);
+  const { sendServerRequest: fetchBoards } = useHttp();
 
   useEffect(() => {
     const getBoardsHandler = (boards) => {
-      console.log(boards);
-      setBoards(boards.data);
+      console.log(boards.data);
+      onSetBoadrs(boards.data);
     };
 
-    some(
+    fetchBoards(
       {
         url: "http://localhost:3000/api/board/649a89d8ea4f124fdddaca88",
         headers: {
@@ -27,13 +28,14 @@ const TasksViewColumn = (props) => {
       },
       getBoardsHandler
     );
-  }, [some]);
+  }, [fetchBoards]);
 
   return (
     <div className={classes.container}>
       {boards.map((board) => (
         <ColumnViewHeader
           handleClose={props.handleClose}
+          OnAddNewTask={props.OnAddNewTask}
           title={board.name}
           count={"۰"}
           borderColor={board.color}
