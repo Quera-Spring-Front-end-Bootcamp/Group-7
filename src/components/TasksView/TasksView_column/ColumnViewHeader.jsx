@@ -39,6 +39,7 @@ const ColumnViewHeader = (props) => {
           name={task.name}
           id={task._id}
           key={task._id}
+          label={task.label}
         />
       ))}
     </div>

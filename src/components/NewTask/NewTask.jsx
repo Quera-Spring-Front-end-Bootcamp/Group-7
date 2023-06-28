@@ -18,6 +18,7 @@ import SpinnerContext from "../../context/spinner-context";
 const NewTask = ({ handleClose, boardID }) => {
   const { sendServerRequest: addNewTask } = useHttp();
   const [priorityMenuVisibility, setPriorityMenuVisibility] = useState(false);
+  const [priority, setPriority] = useState("text-[#B2ACAC]");
   const [tagsMenuVisibility, setTagsMenuVisibility] = useState(false);
   const [calendarVisibility, setCalendarVisibility] = useState(false);
   const textAreaRef = useRef();
@@ -40,7 +41,10 @@ const NewTask = ({ handleClose, boardID }) => {
   const priorityHandler = () => {
     setPriorityMenuVisibility(false);
   };
-
+  const prioritySelectHandler = (priorityColor) => {
+    setPriority(priorityColor);
+    setPriorityMenuVisibility(false);
+  };
   const tagsShowHandler = () => {
     setTagsMenuVisibility(true);
   };
@@ -71,12 +75,11 @@ const NewTask = ({ handleClose, boardID }) => {
             name: taskNameRef.current.value,
             description: textAreaRef.current.value,
             boardId: boardID,
+            label: { deadline: "", priority: priority },
           },
         },
         addTaskResponseHandler
       );
-    } else {
-      console.log("Nooooooooooooo!?");
     }
   };
 
@@ -164,12 +167,18 @@ const NewTask = ({ handleClose, boardID }) => {
                 )}
               </button>
               <button
-                className="flex relative justify-center items-center border rounded-full h-[40px] w-[40px] border-[2px] border-dotted"
+                className={`flex relative justify-center items-center ${priority.replace(
+                  "text",
+                  "border"
+                )} rounded-full h-[40px] w-[40px] border-[2px] border-dotted`}
                 onClick={priorityShowHandler}
               >
-                <FontAwesomeIcon icon={faFlag} className="text-[#BDBDBD]" />
+                <FontAwesomeIcon icon={faFlag} className={`${priority}`} />
                 {priorityMenuVisibility && (
-                  <NewTaskPriority onClickPriority={priorityHandler} />
+                  <NewTaskPriority
+                    onClickPriority={priorityHandler}
+                    onSelectPriority={prioritySelectHandler}
+                  />
                 )}
               </button>
             </div>

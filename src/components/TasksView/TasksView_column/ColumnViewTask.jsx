@@ -57,7 +57,12 @@ const ColumnViewTask = (props) => {
             <span>مهر - فردا</span>
             <span>۵</span>
           </p>
-          <FontAwesomeIcon className="text-[#FB0606]" icon={faFlag} />
+          <FontAwesomeIcon
+            className={`${
+              props.label.priority ? props.label.priority : "text-[#B2ACAC]"
+            }`}
+            icon={faFlag}
+          />
         </div>
         <div className="flex items-center justify-end text-[12px] mb-4">
           <p className="bg-[#EEDFF6] pl-[10px] pr-[5px] py-[3px] mr-[15px] rounded-l-lg">
