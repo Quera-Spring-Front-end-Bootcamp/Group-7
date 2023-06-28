@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAlignRight,
@@ -14,14 +14,40 @@ import {
   faPenToSquare,
 } from "@fortawesome/free-regular-svg-icons";
 import TaskInformation from "../../pop-ups/TaskInformation";
+import useHttp from "../../../hooks/use-http";
+import SpinnerContext from "../../../context/spinner-context";
+import AuthContext from "../../../context/auth-context";
 
 const ColumnViewTask = (props) => {
   const [showTaskInfo, setShowTaskInfo] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const spinnerCtx = useContext(SpinnerContext);
+
+  const { sendServerRequest: deleteTask } = useHttp();
   const showTaskInfoHandler = () => {
     setShowTaskInfo(true);
   };
   const closeTaskInfo = () => {
     setShowTaskInfo(false);
+  };
+  const removeTaskResponseHandler = (data) => {
+    spinnerCtx.modalMsgHandler("تسک با موفقیت حذف گردید");
+    spinnerCtx.toggleModal();
+  };
+  const taskDeleteHandler = (e) => {
+    e.stopPropagation();
+    deleteTask(
+      {
+        url: "http://localhost:3000/api/task/" + props.id,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      removeTaskResponseHandler
+    );
   };
   return (
     <>
@@ -89,7 +115,10 @@ const ColumnViewTask = (props) => {
                 <p className="text-xs">تغییر بورد تسک</p>
                 <FontAwesomeIcon icon={faFileArrowDown} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2 hover:opacity-60">
+              <li
+                className="flex w-full justify-end items-center gap-2 hover:opacity-60"
+                onClick={taskDeleteHandler}
+              >
                 <p className="text-xs">حذف تسک</p>
                 <FontAwesomeIcon icon={faTrashCan} />
               </li>

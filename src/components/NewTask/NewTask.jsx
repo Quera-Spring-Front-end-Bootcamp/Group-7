@@ -75,7 +75,7 @@ const NewTask = ({ handleClose, boardID }) => {
             name: taskNameRef.current.value,
             description: textAreaRef.current.value,
             boardId: boardID,
-            label: { deadline: "", priority: priority },
+            label: [{ deadline: "" }, { priority: priority }],
           },
         },
         addTaskResponseHandler
