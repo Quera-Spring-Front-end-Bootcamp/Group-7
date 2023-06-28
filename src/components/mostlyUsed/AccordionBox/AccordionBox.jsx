@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useRef, useState } from "react";
 import { UserContext } from "../../../context/provider";
 import useHttp from "../../../hooks/use-http";
+import NewProject from "../../Project/NewProject";
 import ShareProject from "../../Share/ShareProject";
 import ShareWorkSpace from "../../Share/ShareWorkSpace";
 import WorkeSpaceStepTwo from "../../WorkSpace/WorkeSpaceStepTwo";
@@ -30,6 +31,7 @@ const AccordionBox = ({ sections }) => {
     spaceColor: false,
     projectName: false,
   });
+  const [showNewProject, setShowNewProject] = useState(false)
 
   const { sendServerRequest: deleteWorkspace } = useHttp();
   const { sendServerRequest: editWorkspaceName } = useHttp();
@@ -157,12 +159,13 @@ const AccordionBox = ({ sections }) => {
   };
 
   const SubBoxSpace = ({ item }) => {
+    console.log(item);
     return (
       <ul
         ref={wrapperRef1}
         className="absolute right-[15px] top-[0] z-10 w-[190px] p-[15px] rounded-xl bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]"
       >
-        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
+        <li onClick={()=>{setShowNewProject(item._id); setShowSubBoxSpace(false)}} className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
           <p className="text-xs">ساختن پروژه جدید</p>
           <FontAwesomeIcon icon={faPlus} />
         </li>
@@ -269,6 +272,7 @@ const AccordionBox = ({ sections }) => {
   console.log(sections);
   return (
     <div className="flex flex-col gap-6">
+      {showNewProject && <NewProject handleClose={setShowNewProject} spaceId={showNewProject} />}
       {isEditing.spaceColor && (
         <BackDrop>
           <div className="w-[500px] relative">
