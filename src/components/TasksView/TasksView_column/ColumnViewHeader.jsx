@@ -1,5 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAlignRight,
+  faPlus,
+  faFileArrowDown,
+  faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faFlag,
+  faSquareCheck,
+  faCircleCheck,
+  faPenToSquare,
+} from "@fortawesome/free-regular-svg-icons";
 import classes from "./TasksView_list.module.css";
 import ColumnViewTask from "./ColumnViewTask";
 const ColumnViewHeader = (props) => {
@@ -24,7 +35,27 @@ const ColumnViewHeader = (props) => {
               افزودن تسک
             </p>
           </button>
-          <span className="tracking-wider -translate-y-[3px]">...</span>
+          <button className="relative group/menu">
+            <p className="tracking-wider -translate-y-[3px]">...</p>
+            <ul className="absolute left-[0] top-[0] z-10 w-[165px] p-[15px] rounded-xl bg-white hidden group-hover/menu:block shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]">
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">ویرایش نام ستون</p>
+                <FontAwesomeIcon icon={faPenToSquare} />
+              </li>
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">افزودن تسک</p>
+                <FontAwesomeIcon icon={faPlus} />
+              </li>
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">آرشیو تمام تسکها</p>
+                <FontAwesomeIcon icon={faFileArrowDown} />
+              </li>
+              <li className="flex w-full justify-end items-center gap-2 hover:opacity-60">
+                <p className="text-xs">حذف ستون</p>
+                <FontAwesomeIcon icon={faTrashCan} />
+              </li>
+            </ul>
+          </button>
         </div>
         <div>
           <span className="inline-flex bg-slate-100 w-[20px] justify-center items-center rounded-lg">

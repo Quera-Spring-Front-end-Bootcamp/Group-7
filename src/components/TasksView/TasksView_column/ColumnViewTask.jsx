@@ -5,6 +5,7 @@ import {
   faPlus,
   faFileArrowDown,
   faTrashCan,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faFlag,
@@ -75,21 +76,21 @@ const ColumnViewTask = (props) => {
         <div className="flex justify-between items-center border-t-[1px] border-slate-300 border-solid h-[0]  group-hover:h-[40px] opacity-0 group-hover:opacity-100 transition-width duration-300 ease-in">
           <button className="relative group/menu">
             <p>...</p>
-            <ul className="absolute right-[0] top-[0] z-10 w-[165px] p-[15px] rounded-xl bg-white hidden group-hover/menu:block shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]">
-              <li className="flex w-full justify-end items-center gap-2 mb-4">
-                <p className="text-xs">ویرایش نام ستون</p>
+            <ul className="absolute left-[0] bottom-[0] z-10 w-[165px] p-[15px] rounded-xl bg-white hidden group-hover/menu:block shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]">
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">واگذاری تسک</p>
                 <FontAwesomeIcon icon={faPenToSquare} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2 mb-4">
-                <p className="text-xs">افزودن تسک</p>
-                <FontAwesomeIcon icon={faPlus} />
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">لغو واگذاری تسک</p>
+                <FontAwesomeIcon icon={faXmark} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2 mb-4">
-                <p className="text-xs">آرشیو تمام تسکها</p>
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">تغییر بورد تسک</p>
                 <FontAwesomeIcon icon={faFileArrowDown} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2">
-                <p className="text-xs">حذف ستون</p>
+              <li className="flex w-full justify-end items-center gap-2 hover:opacity-60">
+                <p className="text-xs">حذف تسک</p>
                 <FontAwesomeIcon icon={faTrashCan} />
               </li>
             </ul>
