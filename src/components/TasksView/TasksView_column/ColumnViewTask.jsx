@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAlignRight,
@@ -20,11 +20,21 @@ import AuthContext from "../../../context/auth-context";
 
 const ColumnViewTask = (props) => {
   const [showTaskInfo, setShowTaskInfo] = useState(false);
+  const [dragStart, setDragStart] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const spinnerCtx = useContext(SpinnerContext);
 
   const { sendServerRequest: deleteTask } = useHttp();
+
+  const dragStartHandler = useCallback(() => {
+    props.getDragedTaskID(props.id);
+    setDragStart(true);
+  }, []);
+  const dragEndHandler = () => {
+    setDragStart(false);
+  };
+
   const showTaskInfoHandler = () => {
     setShowTaskInfo(true);
   };
@@ -53,8 +63,15 @@ const ColumnViewTask = (props) => {
     <>
       {showTaskInfo && <TaskInformation onClose={closeTaskInfo} />}
       <div
-        className=" group cursor-pointer w-[100%] shadow-[0_2px_8px_rgba(0,0,0,0.18)] mt-[20px] p-2.5 rounded"
+        className={`group ${
+          dragStart ? "border-2 border-indigo-500 border-solid " : ""
+        }
+      
+         cursor-pointer bg-white w-[100%] shadow-[0_2px_8px_rgba(0,0,0,0.18)] mt-[20px] p-2.5 rounded`}
         onClick={showTaskInfoHandler}
+        draggable={true}
+        onDragStart={dragStartHandler}
+        onDragEnd={dragEndHandler}
       >
         {props.image && (
           <img
