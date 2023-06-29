@@ -36,6 +36,7 @@ const AccordionBox = ({ sections }) => {
   const { sendServerRequest: deleteWorkspace } = useHttp();
   const { sendServerRequest: editWorkspaceName } = useHttp();
   const { sendServerRequest: editWorkspaceColor } = useHttp();
+  const { sendServerRequest: deleteProject } = useHttp();
   const contextData = useContext(UserContext);
 
   const otherFunc = () => {
@@ -93,6 +94,7 @@ const AccordionBox = ({ sections }) => {
           e.filter((data) => data._id !== val.data._id)
         );
       };
+      
 
       deleteWorkspace(
         {
@@ -103,6 +105,33 @@ const AccordionBox = ({ sections }) => {
       );
     }
   };
+  const handleProjectDelete=(item)=>{
+    console.log(item)
+    if (
+      confirm(`آیا از پاک کردن پروژه با نام " ${item.name} " اطمینان دارید؟`)
+    ) {
+      const deletedProject = (val) => {
+        console.log(val);
+        
+
+        const spaceIndex = contextData.spaces.map(e => e._id).indexOf(val.data.workspace)
+        console.log(spaceIndex)
+        contextData.spaces[spaceIndex].projects.filter((data) => data._id !== val.data._id)
+        contextData.setSpaces((e)=>[...e])
+      
+       
+      };
+      
+
+      deleteProject(
+        {
+          url: `http://localhost:3000/api/projects/${item._id}`,
+          method: "DELETE",
+        },
+        deletedProject
+      );
+    }
+  }
 
   const handleEditSpaceName = (e, item) => {
     console.log(e.target.value);
@@ -129,6 +158,35 @@ const AccordionBox = ({ sections }) => {
           },
         },
         EditedSpaceName
+      );
+    }
+  };
+
+  const handleEditProjectName = (e, item2) => {
+    console.log(e.target.value);
+    if (e.key === "Enter" && e.target.value !== "") {
+      const EditedProjectName = (val) => {
+        console.log(val);
+        console.log(contextData.spaces);
+        const editedIndex = contextData.spaces
+          .map((e) => e._id)
+          .indexOf(val.data._id);
+        console.log(editedIndex);
+        contextData.spaces[editedIndex].name = val.data.name;
+        contextData.setSpaces([...contextData.spaces]);
+        isEditing.spaceName = false;
+        setIsEditing({ ...isEditing });
+      };
+
+      editProjectName(
+        {
+          url: `http://localhost:3000/api/workspace/${item2._id}`,
+          method: "PATCH",
+          body: {
+            name: e.target.value,
+          },
+        },
+        EditedProjectName
       );
     }
   };
@@ -169,6 +227,7 @@ const AccordionBox = ({ sections }) => {
           <p className="text-xs">ساختن پروژه جدید</p>
           <FontAwesomeIcon icon={faPlus} />
         </li>
+
         <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
           {isEditing.spaceName ? (
             <div className=" bg-gray-200 h-7 w-full flex justify-center items-center rounded">
@@ -188,13 +247,7 @@ const AccordionBox = ({ sections }) => {
             </div>
           ) : (
             <>
-              <p
-                onClick={() => {
-                  isEditing.spaceName = true;
-                  setIsEditing({ ...isEditing });
-                }}
-                className="text-xs"
-              >
+              <p onClick={() => {setIsEditing((prev)=>{ return {...prev,spaceName:true } });  }} className="text-xs" >
                 ویرایش نام ورک اسپیس
               </p>
               <FontAwesomeIcon icon={faPenToSquare} />
@@ -236,7 +289,7 @@ const AccordionBox = ({ sections }) => {
       </ul>
     );
   };
-  const SubBoxProject = () => {
+  const SubBoxProject = ({item}) => {
     return (
       <ul
         ref={wrapperRef2}
@@ -247,15 +300,35 @@ const AccordionBox = ({ sections }) => {
           <FontAwesomeIcon icon={faPlus} />
         </li>
         <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
-          <p className="text-xs">ویرایش نام پروژه</p>
+        {isEditing.spaceName ? (
+            <div className=" bg-gray-200 h-7 w-full flex justify-center items-center rounded">
+              <button
+              onClick={() => setIsEditing(e => {return {...e, spaceName: false}})}
+              className=" text-[#323232] ml-1 mt-[2px]"
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+              <input
+                className="w-[90%] bg-gray-200 text-xs"
+                placeholder="برای تایید اینتر بزنید"
+                onKeyUp={(e) => handleEditProjectName(e, item)}
+                defaultValue = {item.name}
+              />
+              
+            </div>
+          ) : (
+            <>
+          <p  onClick={() => {setIsEditing((prev)=>{ return {...prev,spaceName:true } });  }} className="text-xs">ویرایش نام پروژه</p>
           <FontAwesomeIcon icon={faPenToSquare} />
+          </>
+            )}
         </li>
         <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
           <p className="text-xs">کپی لینک</p>
           <FontAwesomeIcon icon={faLink} />
         </li>
-        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer text-red-700 ">
-          <p className="text-xs">حذف</p>
+        <li  className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer text-red-700 ">
+          <p  onClick={()=>handleProjectDelete(item)} className="text-xs">حذف</p>
           <FontAwesomeIcon icon={faTrashCan} />
         </li>
         <li
@@ -333,7 +406,7 @@ const AccordionBox = ({ sections }) => {
                       ...
                     </p>
                     <span className=" absolute left-[20px] ">
-                      {showSubBoxProject === item2._id && <SubBoxProject />}
+                      {showSubBoxProject === item2._id && <SubBoxProject item={item2}/>}
                     </span>
                   </div>
                 ))}
