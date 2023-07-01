@@ -37,6 +37,7 @@ const AccordionBox = ({ sections }) => {
   const { sendServerRequest: editWorkspaceName } = useHttp();
   const { sendServerRequest: editWorkspaceColor } = useHttp();
   const { sendServerRequest: deleteProject } = useHttp();
+  const { sendServerRequest: editProjectName } = useHttp();
   const contextData = useContext(UserContext);
 
   const otherFunc = () => {
@@ -116,8 +117,9 @@ const AccordionBox = ({ sections }) => {
 
         const spaceIndex = contextData.spaces.map(e => e._id).indexOf(val.data.workspace)
         console.log(spaceIndex)
-        contextData.spaces[spaceIndex].projects.filter((data) => data._id !== val.data._id)
-        contextData.setSpaces((e)=>[...e])
+        const newProjects = contextData.spaces
+        newProjects[spaceIndex].projects = newProjects[spaceIndex].projects.filter((data) => data._id !== val.data._id)
+        contextData.setSpaces([...newProjects])
       
        
       };
@@ -162,26 +164,21 @@ const AccordionBox = ({ sections }) => {
     }
   };
 
-  const handleEditProjectName = (e, item2) => {
+  const handleEditProjectName = (e, item) => {
     console.log(e.target.value);
     if (e.key === "Enter" && e.target.value !== "") {
       const EditedProjectName = (val) => {
-        console.log(val);
-        console.log(contextData.spaces);
-        const editedIndex = contextData.spaces
-          .map((e) => e._id)
-          .indexOf(val.data._id);
-        console.log(editedIndex);
-        contextData.spaces[editedIndex].name = val.data.name;
+        const editedSpaceIndex = contextData.spaces.map((e) => e._id).indexOf(val.data.workspace);
+        const editedProjectsIndex = contextData.spaces[editedSpaceIndex].projects.map((e) => e._id).indexOf(val.data._id);
+        contextData.spaces[editedSpaceIndex].projects[editedProjectsIndex].name = val.data.name;
         contextData.setSpaces([...contextData.spaces]);
-        isEditing.spaceName = false;
-        setIsEditing({ ...isEditing });
+        setIsEditing(e => {return{...e, projectName: false}});
       };
 
       editProjectName(
         {
-          url: `http://localhost:3000/api/workspace/${item2._id}`,
-          method: "PATCH",
+          url: `http://localhost:3000/api/projects/${item._id}`,
+          method: "PUT",
           body: {
             name: e.target.value,
           },
@@ -300,10 +297,10 @@ const AccordionBox = ({ sections }) => {
           <FontAwesomeIcon icon={faPlus} />
         </li>
         <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
-        {isEditing.spaceName ? (
+        {isEditing.projectName ? (
             <div className=" bg-gray-200 h-7 w-full flex justify-center items-center rounded">
               <button
-              onClick={() => setIsEditing(e => {return {...e, spaceName: false}})}
+              onClick={() => setIsEditing(e => {return {...e, projectName: false}})}
               className=" text-[#323232] ml-1 mt-[2px]"
             >
               <FontAwesomeIcon icon={faXmark} />
@@ -318,7 +315,7 @@ const AccordionBox = ({ sections }) => {
             </div>
           ) : (
             <>
-          <p  onClick={() => {setIsEditing((prev)=>{ return {...prev,spaceName:true } });  }} className="text-xs">ویرایش نام پروژه</p>
+          <p  onClick={() => {setIsEditing((prev)=>{ return {...prev,projectName:true } });  }} className="text-xs">ویرایش نام پروژه</p>
           <FontAwesomeIcon icon={faPenToSquare} />
           </>
             )}
