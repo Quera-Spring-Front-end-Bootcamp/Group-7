@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAlignRight,
@@ -17,15 +17,44 @@ import TaskInformation from "../../pop-ups/TaskInformation";
 import useHttp from "../../../hooks/use-http";
 import SpinnerContext from "../../../context/spinner-context";
 import AuthContext from "../../../context/auth-context";
-
+import NewTaskTag from "../../NewTask/NewTaskTag";
 const ColumnViewTask = (props) => {
   const [showTaskInfo, setShowTaskInfo] = useState(false);
   const [dragStart, setDragStart] = useState(false);
+  const [showTagsMenu, setShowTagsMenu] = useState(false);
+  const [taskTagsList, setTaskTagList] = useState([]);
 
   const authCtx = useContext(AuthContext);
   const spinnerCtx = useContext(SpinnerContext);
+  const { sendServerRequest: fetchTags } = useHttp();
 
   const { sendServerRequest: deleteTask } = useHttp();
+
+  const addNewTagToTaskHandler = (data) => {
+    setTaskTagList((prev) => {
+      return [...prev, data];
+    });
+  };
+
+  const addTagHandler = (e) => {
+    setShowTagsMenu(true);
+    e.stopPropagation();
+  };
+  useEffect(() => {
+    const fetchedTagsHandler = (result) => {
+      setTaskTagList(result.data.tags);
+    };
+    fetchTags(
+      {
+        url: "http://localhost:3000/api/tags/task/" + props.id,
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      fetchedTagsHandler
+    );
+  }, []);
 
   const dragStartHandler = useCallback(() => {
     props.getDragedTaskID(props.id);
@@ -108,13 +137,31 @@ const ColumnViewTask = (props) => {
             icon={faFlag}
           />
         </div>
-        <div className="flex items-center justify-end text-[12px] mb-4">
-          <p className="bg-[#EEDFF6] pl-[10px] pr-[5px] py-[3px] mr-[15px] rounded-l-lg">
-            پروژه
-          </p>
-          <p className="bg-[#BFFDE3] pl-[10px] pr-[5px] py-[3px] rounded-l-lg">
-            درس
-          </p>
+
+        <div className="relative flex items-center justify-between text-[12px] mb-4">
+          <button title="افزودن تسک" onClick={addTagHandler}>
+            <FontAwesomeIcon icon={faPlus} />
+            {showTagsMenu && (
+              <NewTaskTag
+                onClickTags={setShowTagsMenu}
+                taskId={props.id}
+                onAddNewTag={addNewTagToTaskHandler}
+              />
+            )}
+          </button>
+          <div className="flex items-center justify-between text-[12px]">
+            {taskTagsList.map((tag) => {
+              return (
+                <p
+                  className={`pl-[10px] pr-[5px] py-[3px] ml-[5px] rounded-l-lg`}
+                  key={tag._id}
+                  style={{ backgroundColor: tag.color }}
+                >
+                  {tag.tagName}
+                </p>
+              );
+            })}
+          </div>
         </div>
         <div className="flex justify-between items-center border-t-[1px] border-slate-300 border-solid h-[0]  group-hover:h-[40px] opacity-0 group-hover:opacity-100 transition-width duration-300 ease-in">
           <button className="relative group/menu">
@@ -128,16 +175,16 @@ const ColumnViewTask = (props) => {
                 <p className="text-xs">لغو واگذاری تسک</p>
                 <FontAwesomeIcon icon={faXmark} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
-                <p className="text-xs">تغییر بورد تسک</p>
-                <FontAwesomeIcon icon={faFileArrowDown} />
-              </li>
               <li
-                className="flex w-full justify-end items-center gap-2 hover:opacity-60"
+                className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60 relative"
                 onClick={taskDeleteHandler}
               >
                 <p className="text-xs">حذف تسک</p>
                 <FontAwesomeIcon icon={faTrashCan} />
+              </li>
+              <li className="flex w-full justify-end items-center gap-2 hover:opacity-60">
+                <p className="text-xs">افزودن تگ</p>
+                <FontAwesomeIcon icon={faFileArrowDown} />
               </li>
             </ul>
           </button>

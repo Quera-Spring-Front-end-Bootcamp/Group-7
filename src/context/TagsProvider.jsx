@@ -2,9 +2,9 @@ import { useReducer } from "react";
 import TagsContext from "./tags-context";
 
 const DUMMY_TAGS = [
-  { tagName: "درس", tagColor: "rgb(132, 198, 161)", id: "tag1" },
-  { tagName: "مشق", tagColor: "rgb(120, 198, 176)", id: "tag2" },
-  { tagName: "ورزش", tagColor: "rgb(118, 188, 134)", id: "tag3" },
+  { tagName: "درسی", tagColor: "rgb(132, 198, 161)", id: "tag1" },
+  { tagName: "پروژه", tagColor: "rgb(120, 198, 176)", id: "tag2" },
+  { tagName: "ورزشی", tagColor: "rgb(118, 188, 134)", id: "tag3" },
 ];
 const initialTags = {
   tagNames: DUMMY_TAGS,
