@@ -1,17 +1,22 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import NewTaskTagsMenu from "./NewTaskTagsMenu";
 import TagsContext from "../../context/tags-context";
-const NewTaskTag = ({onClickTags, moreStyles = {} }) => {
+import useHttp from "../../hooks/use-http";
+import AuthContext from "../../context/auth-context";
+
+const NewTaskTag = ({ onAddNewTag, taskId, onClickTags, moreStyles = {} }) => {
+  const { sendServerRequest: addNewTags } = useHttp();
+  const authCtx = useContext(AuthContext);
   const tagsCtx = useContext(TagsContext);
   const tagInputRef = useRef();
   const [isTypeing, setIsTyping] = useState(false);
   const [searchedTags, setSearchedTags] = useState([]);
 
   const tagsHnadler = (e) => {
-    if (e.target.id === "tags-menu__backdrop") {
-      onClickTags({ val: "noPriority" });
+    if (e.target.id === "tags-menu__bgClose") {
+      onClickTags(false);
       e.stopPropagation();
     }
   };
@@ -32,27 +37,52 @@ const NewTaskTag = ({onClickTags, moreStyles = {} }) => {
   };
   const tagFormSubmitHandler = (e) => {
     e.preventDefault();
-    tagsCtx.addTag({
-      tagName:
-        tagInputRef.current.value !== ""
-          ? tagInputRef.current.value
-          : "تگ جدید",
-      tagColor: "rgb(252, 177, 3)",
-      id: Math.random(),
-    });
-    setIsTyping(false);
-    setTimeout(() => {
-      tagInputRef.current.value = "";
-    }, 0);
+
+    const fetchedTagsHandler = (result) => {
+      tagsCtx.addTag({
+        tagName: result.data.tag.name,
+        tagColor: result.data.tag.color,
+        id: result.data.tag._id,
+      });
+      onAddNewTag({
+        tagName: result.data.tag.name,
+        color: result.data.tag.color,
+        id: result.data.tag._id,
+      });
+      setIsTyping(false);
+      setTimeout(() => {
+        tagInputRef.current.value = "";
+      }, 0);
+    };
+
+    addNewTags(
+      {
+        url: "http://localhost:3000/api/tags",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+        body: {
+          name: tagInputRef.current.value,
+          color: "#FF00ff",
+          taskId: taskId,
+        },
+      },
+      fetchedTagsHandler
+    );
   };
   return (
     <>
-      {/* <div
-        className="fixed z-1 left-0 top-0 w-screen h-screen opacity-10"
+      <div
+        className="fixed z-10 bg-black left-0 top-0 w-screen h-screen opacity-80"
         onClick={tagsHnadler}
-        id="tags-menu__backdrop"
-      ></div> */}
-      <div style={moreStyles} className="bg-white w-[220px] z-10 absolute bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)] rounded-lg p-3 bottom-[35px] left-[-95px]">
+        id="tags-menu__bgClose"
+      ></div>
+      <div
+        style={moreStyles}
+        className="bg-white w-[220px] z-50 absolute bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)] rounded-lg p-3 bottom-0 left-0"
+      >
         <form
           className="bg-[#E9E9E9] flex justify-between items-center relative mb-2"
           onSubmit={tagFormSubmitHandler}
