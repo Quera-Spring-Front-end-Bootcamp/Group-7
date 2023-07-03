@@ -11,6 +11,12 @@ const initialTags = {
 };
 
 const tagsReducer = (state, action) => {
+  if (action.type === "RECIEVE-TAGS") {
+    return {
+      tagNames: action.newTags,
+    };
+  }
+
   if (action.type === "REMOVE-TAG") {
     const newTagsList = state.tagNames.filter((tag) => {
       return tag.id !== action.removedTag.id;
@@ -19,7 +25,6 @@ const tagsReducer = (state, action) => {
       tagNames: newTagsList,
     };
   }
-
   if (action.type === "ADD-TAG") {
     const newTagsList = state.tagNames.concat(action.addedTag);
     return {
@@ -60,13 +65,19 @@ const TagsProvider = (props) => {
       changedColor: color,
     });
   };
-
+  const setTagNamesHandler = (tagNames) => {
+    dispatchTags({
+      type: "RECIEVE-TAGS",
+      newTags: tagNames,
+    });
+  };
   const tagsValue = {
     tagNames: tagsState.tagNames,
     searchedTags: tagsState.searchedTags,
     removeTag: tagRemoveHandler,
     addTag: tagAddHandler,
     changeTagColor: tagColorHandler,
+    setTagNames: setTagNamesHandler,
   };
 
   return (

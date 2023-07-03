@@ -18,14 +18,17 @@ import useHttp from "../../../hooks/use-http";
 import SpinnerContext from "../../../context/spinner-context";
 import AuthContext from "../../../context/auth-context";
 import NewTaskTag from "../../NewTask/NewTaskTag";
+import NewTaskTagsMenu from "../../NewTask/NewTaskTagsMenu";
+import TagsContext from "../../../context/tags-context";
 const ColumnViewTask = (props) => {
   const [showTaskInfo, setShowTaskInfo] = useState(false);
   const [dragStart, setDragStart] = useState(false);
   const [showTagsMenu, setShowTagsMenu] = useState(false);
   const [taskTagsList, setTaskTagList] = useState([]);
-
+  const [tagColorMenu, setTagcolorMenu] = useState(false);
   const authCtx = useContext(AuthContext);
   const spinnerCtx = useContext(SpinnerContext);
+  const tagsCtx = useContext(TagsContext);
   const { sendServerRequest: fetchTags } = useHttp();
 
   const { sendServerRequest: deleteTask } = useHttp();
@@ -37,8 +40,9 @@ const ColumnViewTask = (props) => {
   };
 
   const addTagHandler = (e) => {
-    setShowTagsMenu(true);
     e.stopPropagation();
+    tagsCtx.setTagNames(taskTagsList);
+    setShowTagsMenu(true);
   };
   useEffect(() => {
     const fetchedTagsHandler = (result) => {
@@ -139,21 +143,22 @@ const ColumnViewTask = (props) => {
         </div>
 
         <div className="relative flex items-center justify-between text-[12px] mb-4">
-          <button title="افزودن تسک" onClick={addTagHandler}>
+          <button onClick={addTagHandler}>
             <FontAwesomeIcon icon={faPlus} />
             {showTagsMenu && (
               <NewTaskTag
                 onClickTags={setShowTagsMenu}
                 taskId={props.id}
                 onAddNewTag={addNewTagToTaskHandler}
+                taskTags={taskTagsList}
               />
             )}
           </button>
-          <div className="flex items-center justify-between text-[12px]">
+          <div className="flex items-center justify-end text-[12px] flex-wrap">
             {taskTagsList.map((tag) => {
               return (
                 <p
-                  className={`pl-[10px] pr-[5px] py-[3px] ml-[5px] rounded-l-lg`}
+                  className={`pl-[10px] pr-[5px] py-[3px] ml-[5px] mb-[5px] rounded-l-lg`}
                   key={tag._id}
                   style={{ backgroundColor: tag.color }}
                 >

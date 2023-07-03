@@ -6,7 +6,13 @@ import TagsContext from "../../context/tags-context";
 import useHttp from "../../hooks/use-http";
 import AuthContext from "../../context/auth-context";
 
-const NewTaskTag = ({ onAddNewTag, taskId, onClickTags, moreStyles = {} }) => {
+const NewTaskTag = ({
+  taskTags,
+  onAddNewTag,
+  taskId,
+  onClickTags,
+  moreStyles = {},
+}) => {
   const { sendServerRequest: addNewTags } = useHttp();
   const authCtx = useContext(AuthContext);
   const tagsCtx = useContext(TagsContext);
@@ -110,7 +116,7 @@ const NewTaskTag = ({ onAddNewTag, taskId, onClickTags, moreStyles = {} }) => {
             tagsCtx.tagNames.map((tag) => (
               <li
                 className="flex justify-between items-center w-full"
-                key={tag.id}
+                key={tag._id}
               >
                 <div className="group/tag text-slate-300 relative ">
                   ...
@@ -118,7 +124,7 @@ const NewTaskTag = ({ onAddNewTag, taskId, onClickTags, moreStyles = {} }) => {
                 </div>
                 <p
                   className={`rounded-md py-1 px-2 text-sm mb-2`}
-                  style={{ backgroundColor: tag.tagColor }}
+                  style={{ backgroundColor: tag.color }}
                 >
                   {tag.tagName}
                 </p>
