@@ -16,7 +16,9 @@ const UserPersonalInfo = () => {
   const lastNameInputRef = useRef();
   const phoneInputRef = useRef();
 
-  const userChangeInfoHandler = (data) => {
+  const userChangeInfoHandler = (result) => {
+    localStorage.setItem("first_name", result.data.firstname);
+    localStorage.setItem("last_name", result.data.lastname);
     spinnerCtx.modalMsgHandler("اطلاعات با موفقیت بروزرسانی شد");
     spinnerCtx.toggleModal();
   };

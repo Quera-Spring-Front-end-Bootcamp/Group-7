@@ -19,26 +19,25 @@ const NewTaskTagsMenu = (props) => {
   const tagChangeColorHandler = (color) => {
     tagsCtx.changeTagColor(props.clickedTag, color);
   };
-  const showColorMenuHandler = () => {
+  const showColorMenuHandler = (e) => {
+    e.stopPropagation();
+
     setColorMenuVisibility((prevStete) => !prevStete);
   };
   return (
-    <div className="absolute z-50 hidden group-hover/tag:block bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)] rounded-lg p-3 w-[100px] top-0 right-0">
+    <div className="absolute z-50 hidden group-hover/tag:block bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)] rounded-lg p-3 w-[100px] bottom-[10px] right-0">
       <ul className="text-[10px] text-[#1E1E1E]">
         <li
-          className="flex justify-end items-center gap-1 mb-2"
+          className="flex justify-end items-center gap-1 mb-2  "
           onClick={tagRemoveHandler}
         >
           <p>حذف</p>
           <FontAwesomeIcon icon={faXmark} />
         </li>
-        <li className="flex justify-end items-center gap-1 mb-2">
-          <p>ویرایش تگ</p>
-          <FontAwesomeIcon icon={faPenToSquare} />
-        </li>
+
         <li
           onClick={showColorMenuHandler}
-          className="relative flex justify-end items-center gap-1"
+          className="relative flex justify-end items-center gap-1 "
         >
           {colorMenuVisibility && (
             <NewTaskTagsColor onChooseColor={tagChangeColorHandler} />

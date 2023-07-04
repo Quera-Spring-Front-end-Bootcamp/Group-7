@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAlignRight,
@@ -19,15 +19,57 @@ import SpinnerContext from "../../../context/spinner-context";
 import AuthContext from "../../../context/auth-context";
 import DataContext from "../../../context/data-context";
 
+import NewTaskTag from "../../NewTask/NewTaskTag";
+import AssignTask from "../../AssignTask/AssignTask";
+import TagsContext from "../../../context/tags-context";
 const ColumnViewTask = (props) => {
   const [showTaskInfo, setShowTaskInfo] = useState(false);
   const [dragStart, setDragStart] = useState(false);
-
+  const [showTagsMenu, setShowTagsMenu] = useState(false);
+  const [taskTagsList, setTaskTagList] = useState([]);
+  const [assignUser, setAssignUser] = useState(false);
   const authCtx = useContext(AuthContext);
   const spinnerCtx = useContext(SpinnerContext);
-  const { onSetBoadrs, boards, projectId, selectedProject } = useContext(DataContext);
+  const { onSetBoadrs, boards, projectId, selectedProject } =
+    useContext(DataContext);
+  const tagsCtx = useContext(TagsContext);
+  const { sendServerRequest: fetchTags } = useHttp();
 
   const { sendServerRequest: deleteTask } = useHttp();
+
+  const addNewTagToTaskHandler = (data) => {
+    console.log(props.deadline);
+    setTaskTagList((prev) => {
+      return [...prev, data];
+    });
+  };
+  const closeAssignWindow = () => {
+    setAssignUser(false);
+  };
+  const userAssignHandler = (e) => {
+    e.stopPropagation();
+    setAssignUser(true);
+  };
+  const addTagHandler = (e) => {
+    e.stopPropagation();
+    tagsCtx.setTagNames(taskTagsList);
+    setShowTagsMenu(true);
+  };
+  useEffect(() => {
+    const fetchedTagsHandler = (result) => {
+      setTaskTagList(result.data.tags);
+    };
+    fetchTags(
+      {
+        url: "http://localhost:3000/api/tags/task/" + props.id,
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      fetchedTagsHandler
+    );
+  }, []);
 
   const dragStartHandler = useCallback(() => {
     props.getDragedTaskID(props.id);
@@ -68,7 +110,25 @@ const ColumnViewTask = (props) => {
   };
   return (
     <>
-      {showTaskInfo && <TaskInformation onClose={closeTaskInfo} />}
+      {assignUser && (
+        <AssignTask
+          onCloseAssign={closeAssignWindow}
+          id={props.id}
+          name={props.name}
+        />
+      )}
+      {showTaskInfo && (
+        <TaskInformation
+          onClose={closeTaskInfo}
+          name={props.name}
+          description={props.description}
+          id={props.id}
+          img={
+            "https://boomerangapp.ir/wp-content/themes/boomerang/inc/img/Character-Woman-1.png"
+          }
+          deadline={props.deadline}
+        />
+      )}
       <div
         className={`group ${
           dragStart ? "border-2 border-indigo-500 border-solid " : ""
@@ -88,8 +148,12 @@ const ColumnViewTask = (props) => {
           />
         )}
         <div className="flex justify-between items-center mb-4">
-          <p className="text-[12px] bg-[#EAF562] w-[25px] h-[25px] flex justify-center items-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in">
-            NM
+          <p className="text-[10px] bg-[#EAF562] w-[35px] h-[35px] flex justify-center items-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in">
+            {localStorage.getItem("first_name")
+              ? localStorage.getItem("first_name").slice(0, 1).toUpperCase() +
+                " " +
+                localStorage.getItem("last_name").slice(0, 1).toUpperCase()
+              : localStorage.getItem("user").slice(0, 2).toUpperCase()}
           </p>
           <p className="text-[10px] text-[#534D60]">پروژه اول</p>
         </div>
@@ -115,19 +179,41 @@ const ColumnViewTask = (props) => {
             icon={faFlag}
           />
         </div>
-        <div className="flex items-center justify-end text-[12px] mb-4">
-          <p className="bg-[#EEDFF6] pl-[10px] pr-[5px] py-[3px] mr-[15px] rounded-l-lg">
-            پروژه
-          </p>
-          <p className="bg-[#BFFDE3] pl-[10px] pr-[5px] py-[3px] rounded-l-lg">
-            درس
-          </p>
+
+        <div className="relative flex items-center justify-between text-[12px] mb-4">
+          <button onClick={addTagHandler}>
+            <FontAwesomeIcon icon={faPlus} />
+            {showTagsMenu && (
+              <NewTaskTag
+                onClickTags={setShowTagsMenu}
+                taskId={props.id}
+                onAddNewTag={addNewTagToTaskHandler}
+                taskTags={taskTagsList}
+              />
+            )}
+          </button>
+          <div className="flex items-center justify-end text-[12px] flex-wrap">
+            {taskTagsList.map((tag) => {
+              return (
+                <p
+                  className={`pl-[10px] pr-[5px] py-[3px] ml-[5px] mb-[5px] rounded-l-lg`}
+                  key={tag._id}
+                  style={{ backgroundColor: tag.color }}
+                >
+                  {tag.tagName}
+                </p>
+              );
+            })}
+          </div>
         </div>
         <div className="flex justify-between items-center border-t-[1px] border-slate-300 border-solid h-[0]  group-hover:h-[40px] opacity-0 group-hover:opacity-100 transition-width duration-300 ease-in">
           <button className="relative group/menu">
             <p>...</p>
             <ul className="absolute left-[0] bottom-[0] z-10 w-[165px] p-[15px] rounded-xl bg-white hidden group-hover/menu:block shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]">
-              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+              <li
+                className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60"
+                onClick={userAssignHandler}
+              >
                 <p className="text-xs">واگذاری تسک</p>
                 <FontAwesomeIcon icon={faPenToSquare} />
               </li>
@@ -135,12 +221,8 @@ const ColumnViewTask = (props) => {
                 <p className="text-xs">لغو واگذاری تسک</p>
                 <FontAwesomeIcon icon={faXmark} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
-                <p className="text-xs">تغییر بورد تسک</p>
-                <FontAwesomeIcon icon={faFileArrowDown} />
-              </li>
               <li
-                className="flex w-full justify-end items-center gap-2 hover:opacity-60"
+                className="flex w-full justify-end items-center gap-2 mb-0 hover:opacity-60 relative"
                 onClick={taskDeleteHandler}
               >
                 <p className="text-xs">حذف تسک</p>

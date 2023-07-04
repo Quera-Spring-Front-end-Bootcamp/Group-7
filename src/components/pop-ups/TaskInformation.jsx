@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import BackDrop from "../mostlyUsed/BackDrop/BackDrop";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,8 +20,63 @@ import {
   faFaceSmile,
   faNoteSticky,
 } from "@fortawesome/free-regular-svg-icons";
+import useHttp from "../../hooks/use-http";
+import AuthContext from "../../context/auth-context";
+import SpinnerContext from "../../context/spinner-context";
 const TaskInformation = (props) => {
   const [showComent, setShowComment] = useState(false);
+  const authCtx = useContext(AuthContext);
+  const spinnerCtx = useContext(SpinnerContext);
+  const commentInputRef = useRef();
+  const { sendServerRequest: addComment } = useHttp();
+  const { sendServerRequest: fetchComments } = useHttp();
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    const fetchedCommentsHandler = (result) => {
+      setComments(result.data);
+    };
+    fetchComments(
+      {
+        url: "http://localhost:3000/api/comments/task/" + props.id,
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      fetchedCommentsHandler
+    );
+  }, []);
+
+  const addCommentHandler = (data) => {
+    spinnerCtx.modalMsgHandler("نظر شما با موفقیت ثبت گردید");
+    spinnerCtx.toggleModal();
+    setTimeout(() => {
+      commentInputRef.current.value = "";
+    }, 10);
+  };
+
+  const newCommentHandler = () => {
+    if (commentInputRef.current.value.trim() !== "") {
+      addComment(
+        {
+          url: "http://localhost:3000/api/comments",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": authCtx.accessToken,
+          },
+          body: {
+            text: commentInputRef.current.value,
+            taskId: props.id,
+          },
+        },
+        addCommentHandler
+      );
+    } else {
+      console.log("too short");
+    }
+  };
 
   const showCommentHandler = () => {
     setShowComment((prevState) => !prevState);
@@ -74,7 +129,7 @@ const TaskInformation = (props) => {
             </ul>
           </div>
           <div className="flex flex-col items-end p-4">
-            <div className="flex justify-between items-center w-full mb-4">
+            <div className="flex justify-between items-center w-full mb-4 ">
               <p className="flex justify-center items-center gap-1 text-slate-300">
                 <small>ساعت پیش</small>
                 <i>1</i>
@@ -86,56 +141,21 @@ const TaskInformation = (props) => {
                 </a>
               </div>
             </div>
-            <div className="flex justify-between items-center w-full mb-4">
-              <p className="flex justify-center items-center gap-1 text-slate-300">
-                <small>ساعت پیش</small>
-                <i>1</i>
-              </p>
-              <div className="flex justify-center items-center">
-                <p className="flex flex-row-reverse gap-1 justify-center items-center">
-                  این تسک را از{" "}
-                  <span>
-                    <span className="inline-block w-[12px] bg-[#EC612E] h-[12px]"></span>{" "}
-                    In-progress
-                  </span>{" "}
-                  به{" "}
-                  <span>
-                    <span className="inline-block w-[12px] bg-[#0EBB34] h-[12px]"></span>{" "}
-                    Done
-                  </span>{" "}
-                  منتقل کردید
-                </p>
-                <a href="#" className="text-[#208D8E] ml-1">
-                  شما
-                </a>
-              </div>
+            <div className="flex justify-between flex-col items-end w-full mb-4 h-[160px] overflow-auto">
+              {comments.map((comment) => {
+                return (
+                  <div className="mb-2" key={comment._id}>
+                    <p className="text-[#208D8E] mb-1 text-xl">
+                      {comment.user.username}
+                    </p>
+                    <p className="text-sm">{comment.text}</p>
+                  </div>
+                );
+              })}
             </div>
-            <div className="flex justify-between items-center w-full mb-4">
-              <p className="flex justify-center items-center gap-1 text-slate-300">
-                <small>ساعت پیش</small>
-                <i>1</i>
-              </p>
-              <div className="flex justify-center items-center">
-                <p className="flex flex-row-reverse gap-1 justify-center items-center">
-                  این تسک را از{" "}
-                  <span>
-                    <span className="inline-block w-[12px] bg-[#0EBB34] h-[12px]"></span>{" "}
-                    Done
-                  </span>{" "}
-                  به{" "}
-                  <span>
-                    <span className="inline-block w-[12px] bg-[#F7CE46] h-[12px]"></span>{" "}
-                    Pending
-                  </span>{" "}
-                  منتقل کردید
-                </p>
-                <a href="#" className="text-[#208D8E] ml-1">
-                  شما
-                </a>
-              </div>
-            </div>
+
             <div
-              className={`w-full absolute bottom-[5px] left-[0] ${
+              className={`w-full absolute bottom-[5px] left-[0] z-50 ${
                 showComent ? "translate-y-0" : "translate-y-3/4"
               } cursor-pointer rounded borde-solid border-[#F4F4F4] border-[1px] ${
                 showComent
@@ -151,12 +171,15 @@ const TaskInformation = (props) => {
                 <p>کامنت</p>
               </div>
               <textarea
-                name="comment"
                 id="comment-area"
                 className="w-full my-4 text-black resize-none"
+                ref={commentInputRef}
               ></textarea>
               <div className="flex justify-between items-center">
-                <button className="rounded p-2 text-white text-[12px] bg-[#208D8E]">
+                <button
+                  className="rounded p-2 text-white text-[12px] bg-[#208D8E]"
+                  onClick={newCommentHandler}
+                >
                   ثبت کامنت
                 </button>
                 <div className="flex gap-4 items-center text-xl">
@@ -194,7 +217,7 @@ const TaskInformation = (props) => {
                   <FontAwesomeIcon icon={faUserPlus} />
                 </button>
                 <img
-                  src="https://s3-alpha-sig.figma.com/img/0e35/b8e1/c386fc03b862ed171fd63bb7292d7d01?Expires=1685923200&Signature=GqZSKZ~XKKmCE3DwL6gLZgNGTgsn70RFULMDV08IHk2SzA~io~m76tkZHuXRl2jQNUmhw9-XBM~IepivNUTsnWeg4NurrPtp374nk1c6WI-YtQkyJ94rmPMBAhqsHqDxbp~8U2r757phdw-ZfM9Zs1Lg7G9SJ1SB9DyFJGM1CK0TK6Mo5bNSDNOgdL5drHvqzT2zPD~P2Vimy-swi1DzH7CmunZCedewPY10K1vFhLxLqa4xFJMxLqisngtsq52sXq6LgCOac565f7fNvMG0L2q5COyXzm9U9FOxJihadhhGV3MPSqShvMDrMTqPDGxvio5lD92y69Y0-axAhktduA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                  src={props.img}
                   alt="girl-pic"
                   className="w-[35px] h-[35px] rounded-full"
                 />
@@ -222,12 +245,9 @@ const TaskInformation = (props) => {
             <button className="w-[35px] h-[35px]  rounded-full flex justify-center items-center text-slate-300 border-2 border-slate-300 border-dotted">
               <FontAwesomeIcon icon={faTags} />
             </button>
-            <h1 className="mt-6 mb-2 text-xl">عنوان تسک</h1>
+            <h1 className="mt-6 mb-2 text-xl">{props.name}</h1>
             <p className="p-2 text-base border-2 border-slate-300 rounded-lg border-solid w-full">
-              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-              استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله
-              در ستون و سطر آنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد
-              نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد
+              {props.description}
             </p>
             <a href="#" className="mt-8 mb-4">
               <button className="text-[#208D8E] flex gap-x-2 justify-center items center">

@@ -28,13 +28,13 @@ const ColumnViewHeader = (props) => {
   const [editingBoardNameValue, setEditingBoardNameValue] = useState(
     props.title
   );
-    const [randomColor, setRandomColor] = useState("")
+  const [randomColor, setRandomColor] = useState("");
 
   const { sendServerRequest: changeBoardOfTask } = useHttp();
   const { sendServerRequest: editBoard } = useHttp();
   const { sendServerRequest: deleteBoard } = useHttp();
 
-  useEffect(()=>{
+  useEffect(() => {
     const color = [
       "orange",
       "black",
@@ -45,12 +45,14 @@ const ColumnViewHeader = (props) => {
       "red",
       "brown",
       "pink",
-      "blue"
+      "blue",
     ];
-  
-    const random = Math.floor(Math.random() * color.length)
-    if(!randomColor){setRandomColor(color[random])}
-  },[])
+
+    const random = Math.floor(Math.random() * color.length);
+    if (!randomColor) {
+      setRandomColor(color[random]);
+    }
+  }, []);
 
   const taskAddHandler = () => {
     props.OnAddNewTask(props.id);
@@ -173,7 +175,7 @@ const ColumnViewHeader = (props) => {
               افزودن
             </button>
             <input
-              className="border border-gray-200 rounded pr-1 mr-1 text-sm"
+              className="border border-gray-200 rounded pr-1 mr-1 text-sm w-[150px]"
               onChange={(e) => setEditingBoardNameValue(e.target.value)}
               value={editingBoardNameValue}
             />
@@ -182,7 +184,7 @@ const ColumnViewHeader = (props) => {
       ) : (
         <div
           className={` group/container w-full shadow-[0_2px_8px_rgba(0,0,0,0.18)] flex justify-between rounded py-2 px-3 border-solid border-t-[1px]`}
-          style={{ borderColor: randomColor}}
+          style={{ borderColor: props.borderColor }}
         >
           <div className=" flex items-center justify-center h-[25px] gap-2 opacity-0 group-hover/container:opacity-100 transition-opacity duration-200 ease-in">
             <button
@@ -198,19 +200,16 @@ const ColumnViewHeader = (props) => {
               <p className="tracking-wider -translate-y-[3px]">...</p>
               <ul className="absolute left-[0] top-[0] z-10 w-[165px] p-[15px] rounded-xl bg-white hidden group-hover/menu:block shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]">
                 <li
+                  className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60"
                   onClick={() => {
                     setIsEditingBoardName(true);
                     setEditingBoardNameValue(props.title);
                   }}
-                  className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60"
                 >
                   <p className="text-xs">ویرایش نام ستون</p>
                   <FontAwesomeIcon icon={faPenToSquare} />
                 </li>
-                <li
-                  onClick={taskAddHandler}
-                  className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60"
-                >
+                <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
                   <p className="text-xs">افزودن تسک</p>
                   <FontAwesomeIcon icon={faPlus} />
                 </li>
@@ -219,8 +218,8 @@ const ColumnViewHeader = (props) => {
                   <FontAwesomeIcon icon={faFileArrowDown} />
                 </li>
                 <li
-                  onClick={handleBoardDelete}
                   className="flex w-full justify-end items-center gap-2 hover:opacity-60"
+                  onClick={handleBoardDelete}
                 >
                   <p className="text-xs">حذف ستون</p>
                   <FontAwesomeIcon icon={faTrashCan} />
@@ -239,6 +238,7 @@ const ColumnViewHeader = (props) => {
       {props.tasks.map((task) => (
         <ColumnViewTask
           description={task.description}
+          deadline={task.deadline}
           name={task.name}
           id={task._id}
           key={task._id}

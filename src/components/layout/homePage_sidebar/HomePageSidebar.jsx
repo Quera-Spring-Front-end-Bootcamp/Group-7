@@ -100,12 +100,22 @@ const HomePageSidebar = () => {
       <div className="flex flex-col gap-5 items-end">
         <div
           onClick={() => navigate("/profile")}
-          className="flex flex-row-reverse items-center gap-2 cursor-pointer"
+          className="flex flex-row-reverse items-center gap-2 mt-4 cursor-pointer"
         >
           <div className="w-[35px] h-[35px] bg-[#EAF562] rounded-[50%] flex justify-center items-center text-[10px]">
-            MN
+            {localStorage.getItem("first_name")
+              ? localStorage.getItem("first_name").slice(0, 1).toUpperCase() +
+                " " +
+                localStorage.getItem("last_name").slice(0, 1).toUpperCase()
+              : localStorage.getItem("user").slice(0, 2).toUpperCase()}
           </div>
-          <p> نیلوفر موجودی </p>
+          <p>
+            {localStorage.getItem("first_name")
+              ? localStorage.getItem("first_name") +
+                " " +
+                localStorage.getItem("last_name")
+              : localStorage.getItem("user")}
+          </p>
         </div>
         <button
           className="flex flex-row-reverse mr-2 mb-2 gap-2 opacity-60 items-center w-[100px]"
