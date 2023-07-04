@@ -117,7 +117,7 @@ const ColumnViewHeader = (props) => {
         </div>
         <div>
           <span className="inline-flex bg-slate-100 w-[20px] justify-center items-center rounded-lg">
-            {props.count}
+            {props.tasks.length}
           </span>
           <span className="ml-1">{props.title}</span>
         </div>

@@ -18,14 +18,14 @@ import useHttp from "../../../hooks/use-http";
 import SpinnerContext from "../../../context/spinner-context";
 import AuthContext from "../../../context/auth-context";
 import NewTaskTag from "../../NewTask/NewTaskTag";
-import NewTaskTagsMenu from "../../NewTask/NewTaskTagsMenu";
+import AssignTask from "../../AssignTask/AssignTask";
 import TagsContext from "../../../context/tags-context";
 const ColumnViewTask = (props) => {
   const [showTaskInfo, setShowTaskInfo] = useState(false);
   const [dragStart, setDragStart] = useState(false);
   const [showTagsMenu, setShowTagsMenu] = useState(false);
   const [taskTagsList, setTaskTagList] = useState([]);
-  const [tagColorMenu, setTagcolorMenu] = useState(false);
+  const [assignUser, setAssignUser] = useState(false);
   const authCtx = useContext(AuthContext);
   const spinnerCtx = useContext(SpinnerContext);
   const tagsCtx = useContext(TagsContext);
@@ -39,7 +39,13 @@ const ColumnViewTask = (props) => {
       return [...prev, data];
     });
   };
-
+  const closeAssignWindow = () => {
+    setAssignUser(false);
+  };
+  const userAssignHandler = (e) => {
+    e.stopPropagation();
+    setAssignUser(true);
+  };
   const addTagHandler = (e) => {
     e.stopPropagation();
     tagsCtx.setTagNames(taskTagsList);
@@ -95,6 +101,13 @@ const ColumnViewTask = (props) => {
   };
   return (
     <>
+      {assignUser && (
+        <AssignTask
+          onCloseAssign={closeAssignWindow}
+          id={props.id}
+          name={props.name}
+        />
+      )}
       {showTaskInfo && (
         <TaskInformation
           onClose={closeTaskInfo}
@@ -188,7 +201,10 @@ const ColumnViewTask = (props) => {
           <button className="relative group/menu">
             <p>...</p>
             <ul className="absolute left-[0] bottom-[0] z-10 w-[165px] p-[15px] rounded-xl bg-white hidden group-hover/menu:block shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]">
-              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+              <li
+                className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60"
+                onClick={userAssignHandler}
+              >
                 <p className="text-xs">واگذاری تسک</p>
                 <FontAwesomeIcon icon={faPenToSquare} />
               </li>
@@ -197,15 +213,11 @@ const ColumnViewTask = (props) => {
                 <FontAwesomeIcon icon={faXmark} />
               </li>
               <li
-                className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60 relative"
+                className="flex w-full justify-end items-center gap-2 mb-0 hover:opacity-60 relative"
                 onClick={taskDeleteHandler}
               >
                 <p className="text-xs">حذف تسک</p>
                 <FontAwesomeIcon icon={faTrashCan} />
-              </li>
-              <li className="flex w-full justify-end items-center gap-2 hover:opacity-60">
-                <p className="text-xs">افزودن تگ</p>
-                <FontAwesomeIcon icon={faFileArrowDown} />
               </li>
             </ul>
           </button>
