@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import BackDrop from "../mostlyUsed/BackDrop/BackDrop";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -29,7 +29,26 @@ const TaskInformation = (props) => {
   const spinnerCtx = useContext(SpinnerContext);
   const commentInputRef = useRef();
   const { sendServerRequest: addComment } = useHttp();
-  const fetchedTagsHandler = (data) => {
+  const { sendServerRequest: fetchComments } = useHttp();
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    const fetchedCommentsHandler = (result) => {
+      setComments(result.data);
+    };
+    fetchComments(
+      {
+        url: "http://localhost:3000/api/comments/task/" + props.id,
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      fetchedCommentsHandler
+    );
+  }, []);
+
+  const addCommentHandler = (data) => {
     spinnerCtx.modalMsgHandler("نظر شما با موفقیت ثبت گردید");
     spinnerCtx.toggleModal();
     setTimeout(() => {
@@ -52,7 +71,7 @@ const TaskInformation = (props) => {
             taskId: props.id,
           },
         },
-        fetchedTagsHandler
+        addCommentHandler
       );
     } else {
       console.log("too short");
@@ -110,7 +129,7 @@ const TaskInformation = (props) => {
             </ul>
           </div>
           <div className="flex flex-col items-end p-4">
-            <div className="flex justify-between items-center w-full mb-4">
+            <div className="flex justify-between items-center w-full mb-4 ">
               <p className="flex justify-center items-center gap-1 text-slate-300">
                 <small>ساعت پیش</small>
                 <i>1</i>
@@ -122,56 +141,21 @@ const TaskInformation = (props) => {
                 </a>
               </div>
             </div>
-            <div className="flex justify-between items-center w-full mb-4">
-              <p className="flex justify-center items-center gap-1 text-slate-300">
-                <small>ساعت پیش</small>
-                <i>1</i>
-              </p>
-              <div className="flex justify-center items-center">
-                <p className="flex flex-row-reverse gap-1 justify-center items-center">
-                  این تسک را از{" "}
-                  <span>
-                    <span className="inline-block w-[12px] bg-[#EC612E] h-[12px]"></span>{" "}
-                    In-progress
-                  </span>{" "}
-                  به{" "}
-                  <span>
-                    <span className="inline-block w-[12px] bg-[#0EBB34] h-[12px]"></span>{" "}
-                    Done
-                  </span>{" "}
-                  منتقل کردید
-                </p>
-                <a href="#" className="text-[#208D8E] ml-1">
-                  شما
-                </a>
-              </div>
+            <div className="flex justify-between flex-col items-end w-full mb-4 h-[160px] overflow-auto">
+              {comments.map((comment) => {
+                return (
+                  <div className="mb-2" key={comment._id}>
+                    <p className="text-[#208D8E] mb-1 text-xl">
+                      {comment.user.username}
+                    </p>
+                    <p className="text-sm">{comment.text}</p>
+                  </div>
+                );
+              })}
             </div>
-            <div className="flex justify-between items-center w-full mb-4">
-              <p className="flex justify-center items-center gap-1 text-slate-300">
-                <small>ساعت پیش</small>
-                <i>1</i>
-              </p>
-              <div className="flex justify-center items-center">
-                <p className="flex flex-row-reverse gap-1 justify-center items-center">
-                  این تسک را از{" "}
-                  <span>
-                    <span className="inline-block w-[12px] bg-[#0EBB34] h-[12px]"></span>{" "}
-                    Done
-                  </span>{" "}
-                  به{" "}
-                  <span>
-                    <span className="inline-block w-[12px] bg-[#F7CE46] h-[12px]"></span>{" "}
-                    Pending
-                  </span>{" "}
-                  منتقل کردید
-                </p>
-                <a href="#" className="text-[#208D8E] ml-1">
-                  شما
-                </a>
-              </div>
-            </div>
+
             <div
-              className={`w-full absolute bottom-[5px] left-[0] ${
+              className={`w-full absolute bottom-[5px] left-[0] z-50 ${
                 showComent ? "translate-y-0" : "translate-y-3/4"
               } cursor-pointer rounded borde-solid border-[#F4F4F4] border-[1px] ${
                 showComent
