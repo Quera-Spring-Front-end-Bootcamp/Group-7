@@ -8,19 +8,22 @@ import SpinnerProvider from "./context/SpinnerProvider.jsx";
 
 import "./index.css";
 import { AuthContextProvider } from "./context/auth-context.jsx";
+import { DataContextProvider } from "./context/data-context.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <AuthContextProvider>
-    <MyProvider>
-      <TagsProvider>
-        <SpinnerProvider>
-          <React.StrictMode>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </React.StrictMode>
-        </SpinnerProvider>
-      </TagsProvider>
-    </MyProvider>
-  </AuthContextProvider>
+  <DataContextProvider>
+    <AuthContextProvider>
+      <MyProvider>
+        <TagsProvider>
+          <SpinnerProvider>
+            <React.StrictMode>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </React.StrictMode>
+          </SpinnerProvider>
+        </TagsProvider>
+      </MyProvider>
+    </AuthContextProvider>
+  </DataContextProvider>
 );

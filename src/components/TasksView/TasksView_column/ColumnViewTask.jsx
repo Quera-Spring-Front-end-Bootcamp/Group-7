@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAlignRight,
   faPlus,
   faFileArrowDown,
   faTrashCan,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faFlag,
@@ -13,27 +14,79 @@ import {
   faPenToSquare,
 } from "@fortawesome/free-regular-svg-icons";
 import TaskInformation from "../../pop-ups/TaskInformation";
+import useHttp from "../../../hooks/use-http";
+import SpinnerContext from "../../../context/spinner-context";
+import AuthContext from "../../../context/auth-context";
+import DataContext from "../../../context/data-context";
 
 const ColumnViewTask = (props) => {
   const [showTaskInfo, setShowTaskInfo] = useState(false);
+  const [dragStart, setDragStart] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const spinnerCtx = useContext(SpinnerContext);
+  const { onSetBoadrs, boards, projectId, selectedProject } = useContext(DataContext);
+
+  const { sendServerRequest: deleteTask } = useHttp();
+
+  const dragStartHandler = useCallback(() => {
+    props.getDragedTaskID(props.id);
+    setDragStart(true);
+  }, []);
+  const dragEndHandler = () => {
+    setDragStart(false);
+  };
+
   const showTaskInfoHandler = () => {
     setShowTaskInfo(true);
   };
   const closeTaskInfo = () => {
     setShowTaskInfo(false);
   };
+  const removeTaskResponseHandler = (data) => {
+    // const indexOfBoard = boards.map(val => val._id).indexOf(data.data.board)
+    // boards = boards[indexOfBoard].tasks.filter(e => e._id !== data.data.board)
+    // onSetBoadrs(e => [...e])
+    console.log(data);
+    spinnerCtx.modalMsgHandler("تسک با موفقیت حذف گردید");
+    spinnerCtx.toggleModal();
+    // location.reload()
+  };
+  const taskDeleteHandler = (e) => {
+    e.stopPropagation();
+    deleteTask(
+      {
+        url: "http://localhost:3000/api/task/" + props.id,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      removeTaskResponseHandler
+    );
+  };
   return (
     <>
       {showTaskInfo && <TaskInformation onClose={closeTaskInfo} />}
       <div
-        className=" group cursor-pointer w-[100%] shadow-[0_2px_8px_rgba(0,0,0,0.18)] mt-[20px] p-2.5 rounded"
+        className={`group ${
+          dragStart ? "border-2 border-indigo-500 border-solid " : ""
+        }
+      
+         cursor-pointer bg-white w-[100%] shadow-[0_2px_8px_rgba(0,0,0,0.18)] mt-[20px] p-2.5 rounded`}
         onClick={showTaskInfoHandler}
+        draggable={true}
+        onDragStart={dragStartHandler}
+        onDragEnd={dragEndHandler}
       >
-        <img
-          src="https://s3-alpha-sig.figma.com/img/1ff2/08fc/84a00a92e59b4eaa4703234f3437659c?Expires=1685923200&Signature=UeMOqkV1w38scmGxoFI04AHpQNG969oOeo869JXVvs9qwUd5Z~9cnu0qaoNrXLzyV0vXqNm50lRfH3KS57MhgiinTWMWB3Typ8Xc1HLJmUv9FmfTMeNhfVbh6ej3~OA5Gy6CKy52bA0t8UtrcYw080a1oBBII6YvxRnX1Czhgjp77Q5h~mViPGynuTzd4qgYfaxI-fyEUVgoGm4FUfr2FGGifRe8qyhTRPjgrCcA1E5Pz7kJoes1qv~j5wec-u4WhpwzOHXaMo7Tf5x1a-u3X1ekHhsbbvXENOxUUUmAqnD8Nww-2iHjDJlDc5qAg5SGyyL-ryhXgM8yi4bfBuMUJA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
-          alt="work place"
-          className="w-full rounded h-auto mb-4"
-        />
+        {props.image && (
+          <img
+            src="https://s3-alpha-sig.figma.com/img/1ff2/08fc/84a00a92e59b4eaa4703234f3437659c?Expires=1685923200&Signature=UeMOqkV1w38scmGxoFI04AHpQNG969oOeo869JXVvs9qwUd5Z~9cnu0qaoNrXLzyV0vXqNm50lRfH3KS57MhgiinTWMWB3Typ8Xc1HLJmUv9FmfTMeNhfVbh6ej3~OA5Gy6CKy52bA0t8UtrcYw080a1oBBII6YvxRnX1Czhgjp77Q5h~mViPGynuTzd4qgYfaxI-fyEUVgoGm4FUfr2FGGifRe8qyhTRPjgrCcA1E5Pz7kJoes1qv~j5wec-u4WhpwzOHXaMo7Tf5x1a-u3X1ekHhsbbvXENOxUUUmAqnD8Nww-2iHjDJlDc5qAg5SGyyL-ryhXgM8yi4bfBuMUJA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+            alt="work place"
+            className="w-full rounded h-auto mb-4"
+          />
+        )}
         <div className="flex justify-between items-center mb-4">
           <p className="text-[12px] bg-[#EAF562] w-[25px] h-[25px] flex justify-center items-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in">
             NM
@@ -43,7 +96,7 @@ const ColumnViewTask = (props) => {
         <div>
           <p className="text-xs mb-4">
             <FontAwesomeIcon className="text-gray-300" icon={faAlignRight} />{" "}
-            .این یک تیتر برای این تسک است
+            {props.name}
           </p>
         </div>
         <div className="flex justify-end items-center gap-2 mb-4">
@@ -55,7 +108,12 @@ const ColumnViewTask = (props) => {
             <span>مهر - فردا</span>
             <span>۵</span>
           </p>
-          <FontAwesomeIcon className="text-[#FB0606]" icon={faFlag} />
+          <FontAwesomeIcon
+            className={`${
+              props.label.priority ? props.label.priority : "text-[#B2ACAC]"
+            }`}
+            icon={faFlag}
+          />
         </div>
         <div className="flex items-center justify-end text-[12px] mb-4">
           <p className="bg-[#EEDFF6] pl-[10px] pr-[5px] py-[3px] mr-[15px] rounded-l-lg">
@@ -68,21 +126,24 @@ const ColumnViewTask = (props) => {
         <div className="flex justify-between items-center border-t-[1px] border-slate-300 border-solid h-[0]  group-hover:h-[40px] opacity-0 group-hover:opacity-100 transition-width duration-300 ease-in">
           <button className="relative group/menu">
             <p>...</p>
-            <ul className="absolute right-[0] top-[0] z-10 w-[165px] p-[15px] rounded-xl bg-white hidden group-hover/menu:block shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]">
-              <li className="flex w-full justify-end items-center gap-2 mb-4">
-                <p className="text-xs">ویرایش نام ستون</p>
+            <ul className="absolute left-[0] bottom-[0] z-10 w-[165px] p-[15px] rounded-xl bg-white hidden group-hover/menu:block shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]">
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">واگذاری تسک</p>
                 <FontAwesomeIcon icon={faPenToSquare} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2 mb-4">
-                <p className="text-xs">افزودن تسک</p>
-                <FontAwesomeIcon icon={faPlus} />
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">لغو واگذاری تسک</p>
+                <FontAwesomeIcon icon={faXmark} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2 mb-4">
-                <p className="text-xs">آرشیو تمام تسکها</p>
+              <li className="flex w-full justify-end items-center gap-2 mb-4 hover:opacity-60">
+                <p className="text-xs">تغییر بورد تسک</p>
                 <FontAwesomeIcon icon={faFileArrowDown} />
               </li>
-              <li className="flex w-full justify-end items-center gap-2">
-                <p className="text-xs">حذف ستون</p>
+              <li
+                className="flex w-full justify-end items-center gap-2 hover:opacity-60"
+                onClick={taskDeleteHandler}
+              >
+                <p className="text-xs">حذف تسک</p>
                 <FontAwesomeIcon icon={faTrashCan} />
               </li>
             </ul>

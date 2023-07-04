@@ -8,7 +8,8 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import DataContext from "../../../context/data-context";
 import { UserContext } from "../../../context/provider";
 import useHttp from "../../../hooks/use-http";
 import NewProject from "../../Project/NewProject";
@@ -18,8 +19,8 @@ import WorkeSpaceStepTwo from "../../WorkSpace/WorkeSpaceStepTwo";
 import BackDrop from "../BackDrop/BackDrop";
 import { outsideComponentClick } from "../outsideComponentClick/outsideComponentClick";
 
-const AccordionBox = ({ sections }) => {
-  const [activeSection, setActiveSection] = useState(1);
+const AccordionBox = ({ sections, spacesFilter }) => {
+  // const [activeAccordionSection, setActiveAccordionSection] = useState(-1);
   const [showSubBoxSpace, setShowSubBoxSpace] = useState(false);
   const [showSubBoxProject, setShowSubBoxProject] = useState(false);
   const [showSpaceShare, setShowSpaceShare] = useState(false);
@@ -38,7 +39,17 @@ const AccordionBox = ({ sections }) => {
   const { sendServerRequest: editWorkspaceColor } = useHttp();
   const { sendServerRequest: deleteProject } = useHttp();
   const { sendServerRequest: editProjectName } = useHttp();
+  const { sendServerRequest: getAllProjectBoards } = useHttp();
   const contextData = useContext(UserContext);
+  const { setProjectId, onSetBoadrs, setSelectedProject, selectedProject,activeAccordionSection, setActiveAccordionSection } = useContext(DataContext);
+
+  useEffect(()=>{
+    console.log("selectedProject",selectedProject);
+  },[selectedProject])
+
+  useEffect(()=>{
+    
+  },[])
 
   const otherFunc = () => {
     setIsEditing({
@@ -71,10 +82,8 @@ const AccordionBox = ({ sections }) => {
     console.log(place);
     if (place === "space") {
       setShowSpaceShare(true);
-      console.log("/////// space");
     } else if (place === "project") {
       setShowProjectShare(true);
-      console.log("/////// project");
     }
     setShowSubBoxProject(false);
     setShowSubBoxSpace(false);
@@ -213,6 +222,26 @@ const AccordionBox = ({ sections }) => {
     );
   };
 
+  const handleProjectClick = (item2, index) =>{
+    setProjectId(item2._id)
+    console.log(item2);
+    setSelectedProject(item2._id)
+
+    const bordsSuccess =(val)=>{
+      console.log(val);
+      onSetBoadrs(val.data)
+      localStorage.setItem("lastProjectSelected", JSON.stringify({...item2, index:index}))
+    }
+
+    getAllProjectBoards(
+      {
+        url: `http://localhost:3000/api/board/${item2._id}`,
+      },
+      bordsSuccess
+    );
+  };
+
+
   const SubBoxSpace = ({ item }) => {
     console.log(item);
     return (
@@ -220,12 +249,12 @@ const AccordionBox = ({ sections }) => {
         ref={wrapperRef1}
         className="absolute right-[15px] top-[0] z-10 w-[190px] p-[15px] rounded-xl bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]"
       >
-        <li onClick={()=>{setShowNewProject(item._id); setShowSubBoxSpace(false)}} className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
+        <li onClick={()=>{setShowNewProject(item._id); setShowSubBoxSpace(false)}} className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer hover:opacity-60 ">
           <p className="text-xs">ساختن پروژه جدید</p>
           <FontAwesomeIcon icon={faPlus} />
         </li>
 
-        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
+        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer hover:opacity-60 ">
           {isEditing.spaceName ? (
             <div className=" bg-gray-200 h-7 w-full flex justify-center items-center rounded">
               <button
@@ -259,26 +288,26 @@ const AccordionBox = ({ sections }) => {
             setShowSubBoxSpace(false);
             setEditingColorId(item._id);
           }}
-          className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer "
+          className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer hover:opacity-60 "
         >
           <p className="text-xs">ویرایش رنگ</p>
           <FontAwesomeIcon icon={faPalette} />
         </li>
 
-        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
+        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer hover:opacity-60 ">
           <p className="text-xs">کپی لینک</p>
           <FontAwesomeIcon icon={faLink} />
         </li>
         <li
           onClick={() => handleSpaceDelete(item)}
-          className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer text-red-700 "
+          className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer text-red-700 hover:opacity-60 "
         >
           <p className="text-xs">حذف</p>
           <FontAwesomeIcon icon={faTrashCan} />
         </li>
         <li
           onClick={() => handleShareClick("space")}
-          className="flex w-full justify-end items-center gap-2 bg-[#208D8E] rounded p-2 text-white  cursor-pointer "
+          className="flex w-full justify-end items-center gap-2 bg-[#208D8E] rounded p-2 text-white  cursor-pointer hover:opacity-80 "
         >
           <p className="text-xs">اشتراک گذاری</p>
           <FontAwesomeIcon icon={faShareNodes} />
@@ -292,11 +321,11 @@ const AccordionBox = ({ sections }) => {
         ref={wrapperRef2}
         className="absolute right-[15px] top-[0] z-10 w-[190px] p-[15px] rounded-xl bg-white shadow-[0_4px_16px_0_rgba(0,0,0,0.16)]"
       >
-        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
+        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer hover:opacity-60 ">
           <p className="text-xs">ساختن تسک جدید</p>
           <FontAwesomeIcon icon={faPlus} />
         </li>
-        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
+        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer hover:opacity-60 ">
         {isEditing.projectName ? (
             <div className=" bg-gray-200 h-7 w-full flex justify-center items-center rounded">
               <button
@@ -320,17 +349,17 @@ const AccordionBox = ({ sections }) => {
           </>
             )}
         </li>
-        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer ">
+        <li className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer hover:opacity-60 ">
           <p className="text-xs">کپی لینک</p>
           <FontAwesomeIcon icon={faLink} />
         </li>
-        <li  className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer text-red-700 ">
+        <li  className="flex w-full justify-end items-center gap-2 mb-4 cursor-pointer text-red-700 hover:opacity-60 ">
           <p  onClick={()=>handleProjectDelete(item)} className="text-xs">حذف</p>
           <FontAwesomeIcon icon={faTrashCan} />
         </li>
         <li
           onClick={() => handleShareClick("project")}
-          className="flex w-full justify-end items-center gap-2 bg-[#208D8E] rounded p-2 text-white  cursor-pointer "
+          className="flex w-full justify-end items-center gap-2 bg-[#208D8E] rounded p-2 text-white cursor-pointer hover:opacity-80 "
         >
           <p className="text-xs">اشتراک گذاری</p>
           <FontAwesomeIcon icon={faShareNodes} />
@@ -362,13 +391,15 @@ const AccordionBox = ({ sections }) => {
       )}
       {showSpaceShare && <ShareWorkSpace handleClose={setShowSpaceShare} />}
       {showProjectShare && <ShareProject handleClose={setShowProjectShare} />}
-      {sections.map((item, index) => (
+      {sections.filter(e => e.name.includes(spacesFilter)).map((item, index) => (
         <div key={item._id} className="flex flex-col relative">
           <div className="group/container flex flex-row-reverse items-center justify-between">
             <button
               className="flex flex-row-reverse"
-              onClick={() =>
-                setActiveSection(activeSection === index ? -1 : index)
+              onClick={() =>{
+                console.log("projjjj", item.projects.length);
+                (item.projects.length !== 0 ) && setActiveAccordionSection((activeAccordionSection === index ? -1 : index))
+              }
               }
             >
               <div
@@ -389,13 +420,13 @@ const AccordionBox = ({ sections }) => {
           </div>
           <div
             className="transition-[max-height] duration-500 ease-in-out max-h-0 overflow-hidden"
-            style={{ maxHeight: activeSection === index ? "300px" : "0px" }}
+            style={{ maxHeight: activeAccordionSection === index ? "300px" : "0px" }}
           >
             {item.projects.length > 0 && (
               <div className="p-[10px] mr-7 flex flex-col gap-4 mt-3">
                 {item.projects.map((item2, index2) => (
-                  <div className="flex flex-row-reverse w-full items-center justify-between group/container ease-in-out duration-200 hover:bg-[#E9F9FF] p-1.5 rounded ">
-                    <p>{item2.name}</p>
+                  <div className="flex flex-row-reverse w-full items-center justify-between group/container ease-in-out duration-200 hover:bg-[#E9F9FF] p-1.5 rounded " style={selectedProject === item2._id ? {backgroundColor: "#E9F9FF"}:{}} >
+                    <p className="cursor-pointer w-full " onClick={()=>handleProjectClick(item2, index)} >{item2.name}</p>
                     <p
                       className=" opacity-0 group-hover/container:opacity-100 mt-[-6px] transition-opacity duration-200 ease-in-out cursor-pointer"
                       onClick={() => handleProjectOptions(item2._id)}

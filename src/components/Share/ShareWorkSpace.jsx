@@ -2,14 +2,40 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink, faXmark } from "@fortawesome/free-solid-svg-icons";
 import ShareProjectUser from "./ShareProjectUser";
 import BackDrop from "../mostlyUsed/BackDrop/BackDrop";
-const ShareWorkSpace = ({handleClose}) => {
+import { useState } from "react";
+import useHttp from "../../hooks/use-http";
+const ShareWorkSpace = ({ handleClose }) => {
+  const [userSearch, setUserSearch] = useState("");
+  const [showRes, setShowRes] = useState(false);
+  const [userData, setUserData] = useState(false);
+
+  const { sendServerRequest: findUser } = useHttp();
+
+  const handleSubmit = () => {
+    setShowRes(true);
+
+    const foundUser = (data) => {
+      setUserData(data.data);
+    };
+
+    findUser(
+      {
+        url: `http://localhost:3000/api/users/${userSearch}`,
+      },
+      foundUser
+    );
+  };
+
   return (
     <>
-    <BackDrop handleClose={handleClose} >
-      {/* <div className="flex justify-center items-center h-screen w-screen"> */}
+      <BackDrop handleClose={handleClose}>
+        {/* <div className="flex justify-center items-center h-screen w-screen"> */}
         {/* <div className="fixed left-0 top-0 w-screen h-screen bg-black opacity-50"></div> */}
         <div className="w-[600px] p-4 relative z-10 bg-white rounded-xl">
-          <button onClick={() => handleClose(false)} className="absolute text-[#323232] top-[20px] right-[16px]">
+          <button
+            onClick={() => handleClose(false)}
+            className="absolute text-[#323232] top-[20px] right-[16px]"
+          >
             <FontAwesomeIcon icon={faXmark} />
           </button>
           <div className=" pb-0">
@@ -19,11 +45,36 @@ const ShareWorkSpace = ({handleClose}) => {
                 type="text"
                 id="share-project__email"
                 className="w-full h-[40px] bg-[#F0F1F3] rounded-lg pr-2 pl-[95px]"
-                placeholder="دعوت با ایمیل"
+                placeholder="جستجوی کاربر"
+                onChange={(e) => setUserSearch(e.target.value)}
+                value={userSearch}
               />
-              <button className="absolute h-[40px] w-[90px] bg-[#208D8E] left-[0] top-[0] text-white text-center rounded-l-lg">
-                ارسال
+              <button
+                onClick={handleSubmit}
+                className="absolute h-[40px] w-[90px] bg-[#208D8E] left-[0] top-[0] text-white text-center rounded-l-lg"
+              >
+                تایید
               </button>
+
+              {showRes && (
+                <div className="absolute w-full bg-gray-200 mt-2 p-2 rounded hover:bg-gray-300 cursor-pointer ">
+                  <>
+                    {userData ? (
+                      <div className="flex gap-3">
+                        <div className="flex gap-1">
+                          <p>email: </p> <p>{userData.email}</p>
+                        </div>
+
+                        <div className="flex gap-1" >
+                          <p>username: </p> <p>{userData.username}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>not Found</div>
+                    )}
+                  </>
+                </div>
+              )}
             </div>
           </div>
 
@@ -63,7 +114,7 @@ const ShareWorkSpace = ({handleClose}) => {
             />
           </div>
         </div>
-        </BackDrop>
+      </BackDrop>
       {/* </div> */}
     </>
   );

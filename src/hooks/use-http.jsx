@@ -6,7 +6,7 @@ const useHttp = () => {
 
   const accessToken = localStorage.getItem("access_token")
   const sendServerRequest = useCallback(async (requestConfig, applyData) => {
-    spinnerCtx.toggleSpinner();
+    // spinnerCtx.toggleSpinner();
     try {
       const response = await fetch(requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : "GET",
@@ -32,10 +32,10 @@ const useHttp = () => {
 
       applyData(data);
     } catch (err) {
-      spinnerCtx.modalMsgHandler(err.message);
-      spinnerCtx.toggleModal();
+      // spinnerCtx.modalMsgHandler(err.message);
+      // spinnerCtx.toggleModal();
     }
-    spinnerCtx.toggleSpinner();
+    // spinnerCtx.toggleSpinner();
   }, []);
 
   return {

@@ -63,7 +63,7 @@ const HomePageSidebar = () => {
   };
 
   return (
-    <div className="w-[25%] min-w-[250px] border-l border-slate-500 pt-8 pr-8 pl-4 flex flex-col justify-between text-[14px]">
+    <div className="w-[23%] min-w-[23%] border-l border-slate-500 pt-8 pr-8 pl-4 flex flex-col justify-between text-[14px]">
       {showNewWorkSpace && <NewWorkSpace handleClose={setShowNewWorkSpace} />}
       <div className="flex flex-col gap-4">
         <h1 className="headerTitle bg-clip-text text-[28px] font-extrabold mb-6">
@@ -95,7 +95,7 @@ const HomePageSidebar = () => {
           <p className="text-[13px]">ساختن اسپیس جدید</p>{" "}
           <FontAwesomeIcon icon={faSquarePlus} />{" "}
         </button>
-        <AccordionBox sections={spaces} />
+        <AccordionBox spacesFilter={inputval} sections={spaces} />
       </div>
       <div className="flex flex-col gap-5 items-end">
         <div

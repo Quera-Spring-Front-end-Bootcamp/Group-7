@@ -9,17 +9,50 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquarePlus } from "@fortawesome/free-regular-svg-icons";
 import TagsProvider from "../context/TagsProvider";
 import NewTask from "../components/NewTask/NewTask";
+import DataContext from "../context/data-context";
+import useHttp from "../hooks/use-http";
 
 const HomePage = () => {
+  const [receivedBoardID, setReceivedBoardID] = useState();
   //   const { taskManagerState } = useContext(UserContext);
 
-  const { taskManagerState, setCurrentDay } = useContext(UserContext);
-
+  const { taskManagerState, setCurrentDay, spaces } = useContext(UserContext);
+  // const { setProjectId, onSetBoadrs, setSelectedProject, activeAccordionSection, setActiveAccordionSection } = useContext(DataContext);
+  
+  // const { sendServerRequest: getAllProjectBoards } = useHttp();
   const [showNewtaskComponent, setShowNewtaskComponent] = useState(false);
 
+  const CloseCreateTaskHandler = (value) => {
+    setShowNewtaskComponent(value);
+  };
+
+  const addNewTaskHandler = (boardID) => {
+    setReceivedBoardID(boardID);
+  };
+
+  // const handleProjectClick = (project) =>{
+  //   setProjectId(project._id)
+  //   console.log(project);
+    
+  //   const bordsSuccess =(val)=>{
+  //     console.log(val);
+  //     onSetBoadrs(val.data)
+  //     setSelectedProject(project._id)
+  //     setActiveAccordionSection(project.index)
+  //   }
+
+  //   getAllProjectBoards(
+  //     {
+  //       url: `http://localhost:3000/api/board/${project._id}`,
+  //     },
+  //     bordsSuccess
+  //   );
+  // };
+
   useEffect(() => {
-    console.log("=============================================");
     setCurrentDay(new persianDate(new Date()));
+    // const project = localStorage.getItem("lastProjectSelected")
+    // handleProjectClick(JSON.parse(project))
   }, []);
 
   const ShowTasksHandler = () => {
@@ -27,20 +60,27 @@ const HomePage = () => {
       case "list":
         return <TasksViewList />;
       case "column":
-        return <TasksViewColumn />;
+        return (
+          <TasksViewColumn
+            handleClose={CloseCreateTaskHandler}
+            OnAddNewTask={addNewTaskHandler}
+          />
+        );
       case "calendar":
         return <TasksViewCalendar />;
       default:
         return;
     }
   };
-  //   };
 
   return (
     <Layout>
       {showNewtaskComponent && (
         <TagsProvider>
-          <NewTask handleClose={setShowNewtaskComponent} />
+          <NewTask
+            handleClose={CloseCreateTaskHandler}
+            boardID={receivedBoardID}
+          />
         </TagsProvider>
       )}
       <ShowTasksHandler />

@@ -4,6 +4,7 @@ import useHttp from "../../../../hooks/use-http";
 import SpinnerContext from "../../../../context/spinner-context";
 import Input from "../premades/Input";
 import AuthContext from "../../../../context/auth-context";
+import { UserContext } from "../../../../context/provider";
 
 let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 
@@ -14,6 +15,8 @@ const loginReducerState = {
   passwordInputValue: "",
   loginFormIsValid: false,
 };
+
+
 
 const loginFormReducer = (state, action) => {
   if (action.type === "EMAIL_BLUR") {
@@ -46,13 +49,30 @@ const LoginForm = (props) => {
   const navigate = useNavigate();
   const spinnerCtx = useContext(SpinnerContext);
   const authContext = useContext(AuthContext);
+  const { sendServerRequest: getSpaces } = useHttp();
+
+const spaceContext = useContext(UserContext);
 
   const [loginFormState, dispatchLoginForm] = useReducer(
     loginFormReducer,
     loginReducerState
   );
 
+  
   const userLoginDataHandler = (loginData) => {
+    const getSpacesFunction = () => {
+      const gotWorkspaces = (val) => {
+        spaceContext.setSpaces(val.data)
+      };
+  
+      getSpaces(
+        {
+          url: "http://localhost:3000/api/workspace/get-all",
+          method: "GET",
+        },
+        gotWorkspaces
+      );
+    };
     console.log(loginData);
 
     localStorage.setItem("access_token", loginData.data.accessToken);
@@ -65,7 +85,9 @@ const LoginForm = (props) => {
       loginData.data.toBeSendUserData._id,
       loginData.data.toBeSendUserData.username,
     );
+    getSpacesFunction()
     navigate("/");
+    
   };
 
   const { sendServerRequest } = useHttp();

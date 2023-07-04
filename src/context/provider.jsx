@@ -23,13 +23,13 @@ const MyProvider = ({ children }) => {
 
   const [spaces, setSpaces] = useState([
     {
-      title: "درس مدیریت پروژه",
+      name: "درس مدیریت پروژه",
       sideColor: "#71FDA9",
       projects: [],
       id: 0,
     },
     {
-      title: "کار های شخصی",
+      name: "کار های شخصی",
       sideColor: "#DE88FD",
       projects: [
         {
@@ -51,7 +51,7 @@ const MyProvider = ({ children }) => {
       id: 1,
     },
     {
-      title: "درس کامپایلر",
+      name: "درس کامپایلر",
       sideColor: "#FC0733",
       projects: [
         {
@@ -68,7 +68,7 @@ const MyProvider = ({ children }) => {
       id: 2,
     },
     {
-      title: "درس طراحی الگوریتم",
+      name: "درس طراحی الگوریتم",
       sideColor: "#92FF07",
       projects: [
         {
