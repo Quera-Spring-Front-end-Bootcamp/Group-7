@@ -59,7 +59,7 @@ function App() {
         console.log("space valuessss", val);
         spaceContext.setSpaces(val.data)
       };
-
+  
       getSpaces(
         {
           url: "http://localhost:3000/api/workspace/get-all",

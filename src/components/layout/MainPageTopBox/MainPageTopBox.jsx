@@ -125,7 +125,7 @@ const MainPageTopBox = () => {
   };
 
   return (
-    <div className=" h-[140px] w-full flex flex-col justify-center items-center">
+    <div className=" min-h-[15%] h-[15%] w-full flex flex-col justify-center items-center">
       {showShareComponent && <ShareProject handleClose={setShowShareComponent} />}
       <div className="h-1/2 h-full w-full flex flex-row-reverse justify-between items-center">
         <div className="flex flex-row-reverse gap-4 items-center">

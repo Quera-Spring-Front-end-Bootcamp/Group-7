@@ -4,5 +4,6 @@ const SpinnerContext = React.createContext({
   backEndModalVisibility: false,
   toggleSpinner: () => {},
   toggleModal: () => {},
+  modalMsgHandler: () => {},
 });
 export default SpinnerContext;

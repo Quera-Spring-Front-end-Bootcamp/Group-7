@@ -1,12 +1,14 @@
 .container {
   /* background-color: red; */
   position: relative;
-  width: calc(76vw - 30px);
+  /* width: calc(76vw - 30px); */
   display: flex;
   overflow-x: scroll;
+  overflow-y: hidden;
   flex-direction: row-reverse;
   margin-left: auto;
   padding: 20px 0;
+  height: 100%;
 }
 .container .box {
   width: 250px;

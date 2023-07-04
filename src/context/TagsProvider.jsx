@@ -2,15 +2,21 @@ import { useReducer } from "react";
 import TagsContext from "./tags-context";
 
 const DUMMY_TAGS = [
-  { tagName: "درس", tagColor: "rgb(132, 198, 161)", id: "tag1" },
-  { tagName: "مشق", tagColor: "rgb(120, 198, 176)", id: "tag2" },
-  { tagName: "ورزش", tagColor: "rgb(118, 188, 134)", id: "tag3" },
+  { tagName: "درسی", tagColor: "rgb(132, 198, 161)", id: "tag1" },
+  { tagName: "پروژه", tagColor: "rgb(120, 198, 176)", id: "tag2" },
+  { tagName: "ورزشی", tagColor: "rgb(118, 188, 134)", id: "tag3" },
 ];
 const initialTags = {
   tagNames: DUMMY_TAGS,
 };
 
 const tagsReducer = (state, action) => {
+  if (action.type === "RECIEVE-TAGS") {
+    return {
+      tagNames: action.newTags,
+    };
+  }
+
   if (action.type === "REMOVE-TAG") {
     const newTagsList = state.tagNames.filter((tag) => {
       return tag.id !== action.removedTag.id;
@@ -19,7 +25,6 @@ const tagsReducer = (state, action) => {
       tagNames: newTagsList,
     };
   }
-
   if (action.type === "ADD-TAG") {
     const newTagsList = state.tagNames.concat(action.addedTag);
     return {
@@ -60,13 +65,19 @@ const TagsProvider = (props) => {
       changedColor: color,
     });
   };
-
+  const setTagNamesHandler = (tagNames) => {
+    dispatchTags({
+      type: "RECIEVE-TAGS",
+      newTags: tagNames,
+    });
+  };
   const tagsValue = {
     tagNames: tagsState.tagNames,
     searchedTags: tagsState.searchedTags,
     removeTag: tagRemoveHandler,
     addTag: tagAddHandler,
     changeTagColor: tagColorHandler,
+    setTagNames: setTagNamesHandler,
   };
 
   return (

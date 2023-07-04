@@ -3,11 +3,16 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faFlag } from "@fortawesome/free-regular-svg-icons";
 
 const PriorityRow = (props) => {
+  const choosePriorityHandler = (e) => {
+    props.onchoosePriority(props.bgColor);
+    e.stopPropagation();
+  };
   return (
     <li
       className={`${
         props.margin ?? "mb-0"
-      } flex justify-end items-center gap-3 w-full`}
+      } flex justify-end items-center gap-3 w-full hover:opacity-50`}
+      onClick={choosePriorityHandler}
     >
       <p className="text-sm">{props.title}</p>
       <FontAwesomeIcon
@@ -25,6 +30,9 @@ const NewTaskPriority = (props) => {
       e.stopPropagation();
     }
   };
+  const choosePriority = (priority) => {
+    props.onSelectPriority(priority);
+  };
   return (
     <>
       <div
@@ -38,26 +46,31 @@ const NewTaskPriority = (props) => {
             title={"فوری"}
             bgColor={"text-[#FB0606]"}
             margin={"mb-2"}
+            onchoosePriority={choosePriority}
           />
           <PriorityRow
             title={"بالا"}
-            bgColor={"text-[#FFE605]"}
+            bgColor={"text-[#FFA719]"}
             margin={"mb-2"}
+            onchoosePriority={choosePriority}
           />
           <PriorityRow
             title={"متوسط"}
             bgColor={"text-[#09DBCE]"}
             margin={"mb-2"}
+            onchoosePriority={choosePriority}
           />
           <PriorityRow
             title={"پایین"}
-            bgColor={"text-[#B2ACAC]"}
+            bgColor={"text-[#FFE605]"}
             margin={"mb-4"}
+            onchoosePriority={choosePriority}
           />
           <PriorityRow
             title={"حذف اولویت"}
-            bgColor={"text-[#E45454]"}
+            bgColor={"text-[#B2ACAC]"}
             iconName={faXmark}
+            onchoosePriority={choosePriority}
           />
         </ul>
       </div>

@@ -4,6 +4,7 @@ import useHttp from "../../../../hooks/use-http";
 import SpinnerContext from "../../../../context/spinner-context";
 import Input from "../premades/Input";
 import AuthContext from "../../../../context/auth-context";
+import { UserContext } from "../../../../context/provider";
 
 let regex = new RegExp("[a-z0-9]+@[a-z]+[.][a-z]{2,3}");
 
@@ -46,6 +47,9 @@ const LoginForm = (props) => {
   const navigate = useNavigate();
   const spinnerCtx = useContext(SpinnerContext);
   const authContext = useContext(AuthContext);
+  const { sendServerRequest: getSpaces } = useHttp();
+
+  const spaceContext = useContext(UserContext);
 
   const [loginFormState, dispatchLoginForm] = useReducer(
     loginFormReducer,
@@ -53,18 +57,47 @@ const LoginForm = (props) => {
   );
 
   const userLoginDataHandler = (loginData) => {
+    const getSpacesFunction = () => {
+      const gotWorkspaces = (val) => {
+        spaceContext.setSpaces(val.data);
+      };
+
+      getSpaces(
+        {
+          url: "http://localhost:3000/api/workspace/get-all",
+          method: "GET",
+        },
+        gotWorkspaces
+      );
+    };
     console.log(loginData);
 
     localStorage.setItem("access_token", loginData.data.accessToken);
     localStorage.setItem("refresh_token", loginData.data.refreshToken);
     localStorage.setItem("user_ID", loginData.data.toBeSendUserData._id);
+    localStorage.setItem("user_name", loginData.data.toBeSendUserData.username);
+    {
+      loginData.data.toBeSendUserData.firstname &&
+        localStorage.setItem(
+          "first_name",
+          loginData.data.toBeSendUserData.firstname
+        );
+    }
+    {
+      loginData.data.toBeSendUserData.lastname &&
+        localStorage.setItem(
+          "last_name",
+          loginData.data.toBeSendUserData.lastname
+        );
+    }
 
     authContext.login(
       loginData.data.accessToken,
       loginData.data.refreshToken,
       loginData.data.toBeSendUserData._id,
-      loginData.data.toBeSendUserData.username,
+      loginData.data.toBeSendUserData.username
     );
+    getSpacesFunction();
     navigate("/");
   };
 
@@ -156,21 +189,19 @@ const LoginForm = (props) => {
         id="login-form__email"
         inputIsNotValid={loginFormState.emailIsNotValid}
         type="text"
-        value = {loginFormState.emailInputValue}
+        value={loginFormState.emailInputValue}
         inputBlurHandler={emailBlurHandler}
         inputChangeHandler={emailChangeHandler}
         placeholder="example@sth.sth"
-        value={loginFormState.emailInputValue}
       />
       <Input
         title="رمز عبور"
         id="login-form__password"
         inputIsNotValid={loginFormState.passwordIsNotValid}
         type="text"
-        value = {loginFormState.passwordInputValue}
+        value={loginFormState.passwordInputValue}
         inputBlurHandler={passwordBlurHandler}
         inputChangeHandler={passwordChangeHandler}
-        value={loginFormState.passwordInputValue}
       />
       <p
         className="mb-4 text-sm text-[#208D8E] cursor-pointer"

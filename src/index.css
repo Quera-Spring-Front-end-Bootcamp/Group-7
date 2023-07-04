@@ -40,6 +40,37 @@ input.wrong {
   border-color: #ff9494;
   animation: buzz-out-on-hover 0.75s linear 1;
 }
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 1px grey; 
+  border-radius: 10px;
+  /* border: solid rgba(128, 128, 128, 0.158) 1px; */
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #208D8E; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #177475; 
+}
+
+.scroll-styles{
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
 @keyframes buzz-out-on-hover {
   10% {
     -webkit-transform: translateX(3px) rotate(2deg);
