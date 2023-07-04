@@ -58,6 +58,21 @@ const LoginForm = (props) => {
     localStorage.setItem("access_token", loginData.data.accessToken);
     localStorage.setItem("refresh_token", loginData.data.refreshToken);
     localStorage.setItem("user_ID", loginData.data.toBeSendUserData._id);
+    localStorage.setItem("user_name", loginData.data.toBeSendUserData.username);
+    {
+      loginData.data.toBeSendUserData.firstname &&
+        localStorage.setItem(
+          "first_name",
+          loginData.data.toBeSendUserData.firstname
+        );
+    }
+    {
+      loginData.data.toBeSendUserData.lastname &&
+        localStorage.setItem(
+          "last_name",
+          loginData.data.toBeSendUserData.lastname
+        );
+    }
 
     authContext.login(
       loginData.data.accessToken,

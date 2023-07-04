@@ -126,8 +126,12 @@ const ColumnViewTask = (props) => {
           />
         )}
         <div className="flex justify-between items-center mb-4">
-          <p className="text-[12px] bg-[#EAF562] w-[25px] h-[25px] flex justify-center items-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in">
-            NM
+          <p className="text-[10px] bg-[#EAF562] w-[35px] h-[35px] flex justify-center items-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in">
+            {localStorage.getItem("first_name")
+              ? localStorage.getItem("first_name").slice(0, 1).toUpperCase() +
+                " " +
+                localStorage.getItem("last_name").slice(0, 1).toUpperCase()
+              : localStorage.getItem("user").slice(0, 2).toUpperCase()}
           </p>
           <p className="text-[10px] text-[#534D60]">پروژه اول</p>
         </div>
