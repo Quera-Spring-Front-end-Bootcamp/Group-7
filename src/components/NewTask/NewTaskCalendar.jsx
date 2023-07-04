@@ -123,7 +123,7 @@ function miladi_be_shamsi(gy, gm, gd) {
   }
   if (days < 186) {
     jm = 1 + Math.round(days / 31);
-    jd = 1 + (days % 31);
+    jd = days % 31;
   } else {
     jm = 7 + Math.round((days - 186) / 30);
     jd = 1 + ((days - 186) % 30);
@@ -280,7 +280,7 @@ const NewTaskCalendar = (props) => {
           <div id="calendar-left-side" className="w-1/3 bg-[#F7F8F9] py-2 px-4">
             <ul>
               <DatePicker dateTitle="امروز" dateValue={todayValueHandler(0)} />
-              <DatePicker dateTitle="کمی بعد" dateValue="یکشنبه" />
+              <DatePicker dateTitle="کمی بعد" dateValue="21" />
               <DatePicker dateTitle="فردا" dateValue={todayValueHandler(1)} />
               <DatePicker dateTitle="این آخر هفته" dateValue="جمعه" />
               <DatePicker

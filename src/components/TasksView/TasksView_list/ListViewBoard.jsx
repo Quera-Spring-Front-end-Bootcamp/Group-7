@@ -51,7 +51,7 @@ const ListViewBoard = (props) => {
         <div className="flex justify-end gap-2 items-center w-[50%]">
           <p className="text-sm" onClick={chevronClickHandler}>
             {" "}
-            {2} تسک
+            برد شماره یک
           </p>
           <h2 className="text-lg bg-[#ff00ff] rounded px-2">{props.title}</h2>
           <button
@@ -72,8 +72,8 @@ const ListViewBoard = (props) => {
       >
         {/* we need a map on getProjectsByWorkSpaceID property of boards */}
 
-        <ListViewTask />
-        <ListViewTask />
+        <ListViewTask title="تسک شماره یک" deadline="30تیر" />
+        <ListViewTask title="تسک شماره دو" deadline="12 مرداد" />
       </div>
     </div>
   );
