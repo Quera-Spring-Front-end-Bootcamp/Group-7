@@ -15,7 +15,7 @@ const ListViewTask = (props) => {
         <p className="w-[25%] text-center text-sm">
           <FontAwesomeIcon icon={faFlag} />
         </p>
-        <p className="w-[25%] text-center text-sm">6آبان</p>
+        <p className="w-[25%] text-center text-sm">{props.deadline}</p>
         <div className="w-[25%] text-center flex justify-center [&>*:nth-child(1)]:ml-0">
           <img
             src={Img2}
@@ -31,7 +31,7 @@ const ListViewTask = (props) => {
       </div>
 
       <div className="flex justify-end gap-2 items-center w-[50%] pr-6">
-        <p className="text-sm">این یک تایتل برای تسک است</p>
+        <p className="text-sm">{props.title}</p>
         <p className="w-[12px] h-[12px] rounded bg-[#ff0000]"></p>
       </div>
     </div>
