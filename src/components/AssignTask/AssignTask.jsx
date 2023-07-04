@@ -1,21 +1,29 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import useHttp from "../../hooks/use-http";
 
 import BackDrop from "../mostlyUsed/BackDrop/BackDrop";
 import AuthContext from "../../context/auth-context";
 const AssignTask = (props) => {
   const [assignedUsers, setAssignedUsers] = useState([]);
-  const [searchedUser, setSsearchedUser] = useState({});
+  const [searchedUser, setSsearchedUser] = useState([]);
   const [error, setError] = useState(false);
   const nameInputRef = useRef();
   const authCtx = useContext(AuthContext);
   const { sendServerRequest: searchUser } = useHttp();
   const { sendServerRequest: fetchAssignedUsers } = useHttp();
+  const { sendServerRequest: assignTask } = useHttp();
+  const { sendServerRequest: unAssignTask } = useHttp();
 
   const searchedUserHandler = (result) => {
-    setSsearchedUser(result.data);
+    setSsearchedUser([
+      {
+        username: result.data.username,
+        id: result.data._id,
+      },
+    ]);
+    nameInputRef.current.value = "";
   };
 
   const searchUserHandler = () => {
@@ -33,9 +41,54 @@ const AssignTask = (props) => {
     }
   };
 
+  const assighnResultHandler = (result) => {
+    setAssignedUsers((prev) => {
+      return [...prev, result.data];
+    });
+    setSsearchedUser([]);
+  };
+
+  const assignTaskHandler = () => {
+    assignTask(
+      {
+        url:
+          "http://localhost:3000/api/task/" +
+          props.id +
+          "/assign/" +
+          searchedUser[0].id,
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      assighnResultHandler
+    );
+  };
+  const unAssighnResultHandler = (result) => {};
+  const unassignTaskHandler = (e) => {
+    let arg1 = e.target.getAttribute("data-arg1");
+
+    let newArr = assignedUsers.filter((user) => {
+      return user.user.username !== arg1;
+    });
+    setAssignedUsers(newArr);
+    unAssignTask(
+      {
+        url: "http://localhost:3000/api/task/" + props.id + "/assign/" + arg1,
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authCtx.accessToken,
+        },
+      },
+      unAssighnResultHandler
+    );
+  };
+
   useEffect(() => {
-    const handleFetchedAssigns = (data) => {
-      console.log(data);
+    const handleFetchedAssigns = (result) => {
+      setAssignedUsers(result.data.taskAssigns);
     };
     fetchAssignedUsers(
       {
@@ -77,14 +130,22 @@ const AssignTask = (props) => {
               </button>
             </div>
           </div>
-          {/* {searchedUser.map((user) => {
+          {searchedUser.map((user) => {
             return (
-              <div className="flex justify-between items center">
+              <div
+                className="flex justify-between items-center border-solid border-[1px] border-salte-300 p-1 rounded"
+                key={user.id + user._id}
+                title="واگذاری تسک"
+              >
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  onClick={assignTaskHandler}
+                  className="cursor-pointer"
+                />
                 <p>{user.username}</p>
-                <p>{user.firstname}</p>
               </div>
             );
-          })} */}
+          })}
           <div className="flex flex-col gap-4 mt-8">
             <p className="text-sm text-[#7D828C]">واگذاری شده به</p>
             <div className="flex justify-between flex-col items-end">
@@ -93,7 +154,19 @@ const AssignTask = (props) => {
                   این پروژه به کاربری واگذار نشده است
                 </p>
               ) : (
-                assignedUsers.map((user) => <p>کاربر</p>)
+                assignedUsers.map((user) => {
+                  return (
+                    <div className="flex justify-between items-center p-1 mb-1 border-solid border-[1px] w-full border-slate-300 rounded">
+                      <FontAwesomeIcon
+                        icon={faXmark}
+                        onClick={unassignTaskHandler}
+                        data-arg1={user.user.username}
+                        className="text-[#ff0000] cursor-pointer"
+                      />
+                      <p>{user.user.username}</p>
+                    </div>
+                  );
+                })
               )}
               {/* کاربران که واگذار شده باید اینجا رندر بشه */}
             </div>
