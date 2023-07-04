@@ -23,7 +23,6 @@ const ColumnViewHeader = (props) => {
   const [dragOverShadow, SetragOverShadow] = useState(false);
   const [dropedTaskId, setDropedTaskId] = useState(123);
   const { sendServerRequest: changeBoardOfTask } = useHttp();
-
   const taskAddHandler = () => {
     props.OnAddNewTask(props.id);
     props.handleClose(true);
@@ -126,6 +125,7 @@ const ColumnViewHeader = (props) => {
       {props.tasks.map((task) => (
         <ColumnViewTask
           description={task.description}
+          deadline={task.deadline}
           name={task.name}
           id={task._id}
           key={task._id}

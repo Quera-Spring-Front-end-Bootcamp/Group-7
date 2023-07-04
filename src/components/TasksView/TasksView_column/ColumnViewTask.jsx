@@ -34,6 +34,7 @@ const ColumnViewTask = (props) => {
   const { sendServerRequest: deleteTask } = useHttp();
 
   const addNewTagToTaskHandler = (data) => {
+    console.log(props.deadline);
     setTaskTagList((prev) => {
       return [...prev, data];
     });
@@ -94,7 +95,18 @@ const ColumnViewTask = (props) => {
   };
   return (
     <>
-      {showTaskInfo && <TaskInformation onClose={closeTaskInfo} />}
+      {showTaskInfo && (
+        <TaskInformation
+          onClose={closeTaskInfo}
+          name={props.name}
+          description={props.description}
+          id={props.id}
+          img={
+            "https://boomerangapp.ir/wp-content/themes/boomerang/inc/img/Character-Woman-1.png"
+          }
+          deadline={props.deadline}
+        />
+      )}
       <div
         className={`group ${
           dragStart ? "border-2 border-indigo-500 border-solid " : ""

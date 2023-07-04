@@ -47,7 +47,7 @@ const NewTaskTag = ({
     const fetchedTagsHandler = (result) => {
       tagsCtx.addTag({
         tagName: result.data.tag.name,
-        tagColor: result.data.tag.color,
+        color: result.data.tag.color,
         id: result.data.tag._id,
       });
       onAddNewTag({
@@ -71,7 +71,7 @@ const NewTaskTag = ({
         },
         body: {
           name: tagInputRef.current.value,
-          color: "#FF00ff",
+          color: "#C3EDC0",
           taskId: taskId,
         },
       },

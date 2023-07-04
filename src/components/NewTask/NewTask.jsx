@@ -29,7 +29,6 @@ const NewTask = ({ handleClose, boardID }) => {
     handleClose(false);
     spinnerCtx.modalMsgHandler("تسک جدید با موفقیت ساخته شد");
     spinnerCtx.toggleModal();
-    console.log(data);
   };
 
   const wrapperRef = useRef(null);
@@ -62,7 +61,6 @@ const NewTask = ({ handleClose, boardID }) => {
       taskNameRef.current.value.trim() !== "" &&
       textAreaRef.current.value.trim() !== ""
     ) {
-      console.log("yesssssssssss");
       addNewTask(
         {
           url: "http://localhost:3000/api/task",
@@ -76,6 +74,7 @@ const NewTask = ({ handleClose, boardID }) => {
             description: textAreaRef.current.value,
             boardId: boardID,
             label: [{ deadline: "" }, { priority: priority }],
+            deadline: new Date(),
           },
         },
         addTaskResponseHandler
